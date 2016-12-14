@@ -27,11 +27,12 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Random;
 import java.util.Set;
 
 import org.junit.Test;
-import org.liveontologies.proof.util.ProofNode;
-import org.liveontologies.proof.util.ProofNodes;
 
 /**
  * @author Pavel Klinov
@@ -60,8 +61,8 @@ public class ProofTest {
 
 		assertTrue(ProofNodes.isDerivable(root));
 
-		assertEquals(2, ProofNodes.eliminateNotDerivable(root)
-				.getInferences().size());
+		assertEquals(2,
+				ProofNodes.eliminateNotDerivable(root).getInferences().size());
 
 		// only one inference remains since the other is cyclic
 		assertEquals(1, ProofNodes.eliminateNotDerivableAndCycles(root)
@@ -76,9 +77,8 @@ public class ProofTest {
 				.getInferences().size());
 
 		// only one inference remains since the other is cyclic
-		assertEquals(1,
-				ProofNodes.eliminateNotDerivableAndCycles(root, stated)
-						.getInferences().size());
+		assertEquals(1, ProofNodes.eliminateNotDerivableAndCycles(root, stated)
+				.getInferences().size());
 
 	}
 
@@ -91,14 +91,14 @@ public class ProofTest {
 
 		Set<Integer> stated = new HashSet<Integer>(Arrays.asList(1, 3, 4));
 
-		ProofNode<Integer> root = ProofNodes
-				.addStatedAxioms(proof.getNode(0), stated);
+		ProofNode<Integer> root = ProofNodes.addStatedAxioms(proof.getNode(0),
+				stated);
 
 		assertTrue(ProofNodes.isDerivable(root));
 
 		// everything is derivable
-		assertEquals(2, ProofNodes.eliminateNotDerivable(root)
-				.getInferences().size());
+		assertEquals(2,
+				ProofNodes.eliminateNotDerivable(root).getInferences().size());
 
 		// only one inference remains since the other is cyclic
 		assertEquals(1, ProofNodes.eliminateNotDerivableAndCycles(root)
@@ -114,9 +114,8 @@ public class ProofTest {
 				.getInferences().size());
 
 		// only one inference remains since the other is cyclic
-		assertEquals(1,
-				ProofNodes.eliminateNotDerivableAndCycles(root, stated)
-						.getInferences().size());
+		assertEquals(1, ProofNodes.eliminateNotDerivableAndCycles(root, stated)
+				.getInferences().size());
 
 	}
 
@@ -131,11 +130,11 @@ public class ProofTest {
 		Set<Integer> stated = new HashSet<Integer>(
 				Arrays.asList(2, 5, 6, 7, 8, 9));
 
-		ProofNode<Integer> root = ProofNodes
-				.addStatedAxioms(proof.getNode(0), stated);
+		ProofNode<Integer> root = ProofNodes.addStatedAxioms(proof.getNode(0),
+				stated);
 
-		assertEquals(1, ProofNodes.eliminateNotDerivable(root)
-				.getInferences().size());
+		assertEquals(1,
+				ProofNodes.eliminateNotDerivable(root).getInferences().size());
 
 		stated.remove(6);
 
@@ -155,6 +154,42 @@ public class ProofTest {
 
 		// not derivable anymore
 		assertEquals(null, ProofNodes.eliminateNotDerivable(root, stated));
+	}
+
+	@Test
+	public void limitInferences() throws Exception {
+		Random random = new Random();
+		long seed = random.nextLong();
+		random.setSeed(seed);
+		ProofNode<Integer> node = RandomProof.generate(random);
+
+		try {
+
+			for (int limit = 1; limit < 5; limit++) {
+
+				ProofNode<Integer> root = ProofNodes
+						.limitInferencesPerNode(node, limit);
+				Queue<ProofNode<Integer>> toCheck = new LinkedList<ProofNode<Integer>>();
+				toCheck.add(root);
+				int tests = 0;
+
+				while (tests < 10) {
+					ProofNode<Integer> next = toCheck.poll();
+					if (next == null) {
+						return;
+					}
+					assertTrue(next.getInferences().size() <= limit);
+					tests++;
+					for (ProofStep<Integer> inf : next.getInferences()) {
+						for (ProofNode<Integer> premise : inf.getPremises()) {
+							toCheck.add(premise);
+						}
+					}
+				}
+			}
+		} catch (Throwable e) {
+			throw new RuntimeException("seed: " + seed, e);
+		}
 	}
 
 }
