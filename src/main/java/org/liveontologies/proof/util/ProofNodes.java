@@ -6,16 +6,6 @@ package org.liveontologies.proof.util;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.liveontologies.proof.util.AcyclicDerivableFromProofNode;
-import org.liveontologies.proof.util.AcyclicDerivableProofNode;
-import org.liveontologies.proof.util.CachingProofNode;
-import org.liveontologies.proof.util.DerivableFromProofNode;
-import org.liveontologies.proof.util.DerivableProofNode;
-import org.liveontologies.proof.util.ExtendedProofNode;
-import org.liveontologies.proof.util.ProofNode;
-import org.liveontologies.proof.util.ProofNodeDerivabilityChecker;
-import org.liveontologies.proof.util.ProofStep;
-
 /*
  * #%L
  * OWL API Proofs Model
@@ -88,6 +78,11 @@ public class ProofNodes {
 		}
 		// else
 		return null;
+	}
+
+	public static <C> ProofNode<C> limitInferencesPerNode(ProofNode<C> node,
+			int limit) {
+		return new LimitedProofNode<C>(node, limit);
 	}
 
 	public static <C> ProofNode<C> cache(ProofNode<C> node) {
