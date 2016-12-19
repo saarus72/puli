@@ -22,23 +22,52 @@ package org.liveontologies.proof.util;
  * #L%
  */
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
- * Represents an inference step in which a conclusion represented by a proof
- * node is obtained from premises represented by other proof nodes.
- * 
  * @author Yevgeny Kazakov
  *
  * @param <C>
  *            the type of conclusions and premises this inference operate with
+ *
  */
-public interface ProofStep<C> extends Inference<ProofNode<C>> {
+public class MockInference<C> implements Inference<C> {
 
-	/**
-	 * @return the inference used in this {@link ProofStep}. The conclusion and
-	 *         premises of the inference should be the respective members of the
-	 *         conclusion and premises of this {@link ProofStep}, and the name
-	 *         should be the same.
-	 */
-	Inference<C> getInference();
+	private final String name_;
+
+	private final C conclusion_;
+
+	private final List<C> premises_;
+
+	public static <C> MockInference<C> create(String name, C conclusion,
+			List<C> premises) {
+		return new MockInference<C>(name, conclusion, premises);
+	}
+
+	public static <C> MockInference<C> create(String name, C conclusion) {
+		return new MockInference<C>(name, conclusion, new ArrayList<C>());
+	}
+
+	private MockInference(String name, C conclusion, List<C> premises) {
+		name_ = name;
+		conclusion_ = conclusion;
+		premises_ = premises;
+	}
+
+	@Override
+	public String getName() {
+		return name_;
+	}
+
+	@Override
+	public C getConclusion() {
+		return conclusion_;
+	}
+
+	@Override
+	public List<? extends C> getPremises() {
+		return premises_;
+	}
 
 }

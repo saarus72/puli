@@ -1,5 +1,7 @@
 package org.liveontologies.proof.util;
 
+import java.util.AbstractList;
+
 /*-
  * #%L
  * OWL API Proof Extension
@@ -24,10 +26,6 @@ package org.liveontologies.proof.util;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import org.liveontologies.proof.util.Inference;
-import org.liveontologies.proof.util.ProofNode;
-import org.liveontologies.proof.util.ProofStep;
 
 /**
  * @author Pavel Klinov pavel.klinov@uni-ulm.de
@@ -89,8 +87,20 @@ public class MockProofStep<C> implements ProofStep<C> {
 	}
 
 	@Override
-	public Inference<C> getExample() {
-		return null;
+	public Inference<C> getInference() {
+		return MockInference.create(name_, conclusion_.getMember(),
+				new AbstractList<C>() {
+
+					@Override
+					public C get(int index) {
+						return premises_.get(index).getMember();
+					}
+
+					@Override
+					public int size() {
+						return premises_.size();
+					}
+				});
 	}
 
 }

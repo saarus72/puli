@@ -24,8 +24,6 @@ package org.liveontologies.proof.util;
 
 import java.util.Collection;
 
-import org.liveontologies.proof.util.ProofStep;
-
 /**
  * Represents (possibly recursive) derivations for the given conclusion
  * 

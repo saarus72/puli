@@ -24,11 +24,6 @@ package org.liveontologies.proof.util;
 
 import java.util.List;
 
-import org.liveontologies.proof.util.Delegator;
-import org.liveontologies.proof.util.Inference;
-import org.liveontologies.proof.util.ProofNode;
-import org.liveontologies.proof.util.ProofStep;
-
 public class DelegatingProofStep<C> extends Delegator<ProofStep<C>>
 		implements ProofStep<C> {
 
@@ -52,8 +47,8 @@ public class DelegatingProofStep<C> extends Delegator<ProofStep<C>>
 	}
 
 	@Override
-	public Inference<C> getExample() {
-		return getDelegate().getExample();
+	public Inference<C> getInference() {
+		return getDelegate().getInference();
 	}
 
 }

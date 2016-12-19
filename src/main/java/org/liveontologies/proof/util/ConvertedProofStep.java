@@ -22,15 +22,10 @@ package org.liveontologies.proof.util;
  * #L%
  */
 
-import java.util.ArrayList;
+import java.util.AbstractList;
 import java.util.List;
 
-import org.liveontologies.proof.util.ConvertedProofNode;
-import org.liveontologies.proof.util.DelegatingProofStep;
-import org.liveontologies.proof.util.ProofNode;
-import org.liveontologies.proof.util.ProofStep;
-
-abstract class ConvertedProofStep<C> extends DelegatingProofStep<C> {
+public class ConvertedProofStep<C> extends DelegatingProofStep<C> {
 
 	protected ConvertedProofStep(ProofStep<C> delegate) {
 		super(delegate);
@@ -38,11 +33,19 @@ abstract class ConvertedProofStep<C> extends DelegatingProofStep<C> {
 
 	@Override
 	public List<ProofNode<C>> getPremises() {
-		List<ProofNode<C>> result = new ArrayList<ProofNode<C>>();
-		for (ProofNode<C> node : super.getPremises()) {
-			result.add(convert(node));
-		}
-		return result;
+		final List<? extends ProofNode<C>> original = super.getPremises();
+		return new AbstractList<ProofNode<C>>() {
+
+			@Override
+			public ProofNode<C> get(int index) {
+				return convert(original.get(index));
+			}
+
+			@Override
+			public int size() {
+				return original.size();
+			}
+		};
 	}
 
 	@Override
@@ -50,6 +53,8 @@ abstract class ConvertedProofStep<C> extends DelegatingProofStep<C> {
 		return convert(super.getConclusion());
 	}
 
-	protected abstract ConvertedProofNode<C> convert(ProofNode<C> node);
+	protected ConvertedProofNode<C> convert(ProofNode<C> node) {
+		return new ConvertedProofNode<C>(node);
+	}
 
 }

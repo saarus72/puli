@@ -22,35 +22,41 @@ package org.liveontologies.proof.util;
  * #L%
  */
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
-class ConvertedProofNode<C> extends DelegatingProofNode<C> {
+/**
+ * A special inference representing that a conclusion is derivable from no
+ * premises; usually it means that the conclusion is preset in the initial set
+ * from which other conclusions are derived.
+ * 
+ * @author Yevgeny Kazakov
+ *
+ * @param <C>
+ */
+public class AssertedConclusionInference<C> implements Inference<C> {
 
-	private Collection<ProofStep<C>> inferences_;
+	public static String NAME = "Asserted Conclusion";
 
-	protected ConvertedProofNode(ProofNode<C> delegate) {
-		super(delegate);
+	private final C conclusion_;
+
+	public AssertedConclusionInference(C conclusion) {
+		this.conclusion_ = conclusion;
 	}
 
 	@Override
-	public Collection<ProofStep<C>> getInferences() {
-		if (inferences_ == null) {
-			Collection<? extends ProofStep<C>> original = super.getInferences();
-			inferences_ = new ArrayList<ProofStep<C>>(original.size());
-			for (ProofStep<C> step : original) {
-				convert(step);
-			}
-		}
-		return inferences_;
+	public String getName() {
+		return NAME;
 	}
 
-	void convert(ProofStep<C> step) {
-		convert(new ConvertedProofStep<C>(step));
+	@Override
+	public C getConclusion() {
+		return conclusion_;
 	}
 
-	void convert(ConvertedProofStep<C> step) {
-		inferences_.add(step);
+	@Override
+	public List<? extends C> getPremises() {
+		return Collections.emptyList();
 	}
 
 }

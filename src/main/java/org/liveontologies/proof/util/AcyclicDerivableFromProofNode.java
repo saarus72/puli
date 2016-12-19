@@ -1,8 +1,5 @@
 package org.liveontologies.proof.util;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 /*-
  * #%L
  * OWL API Proof Extension
@@ -27,19 +24,11 @@ import java.util.Collection;
 
 import java.util.Set;
 
-import org.liveontologies.proof.util.AcyclicDerivableFromProofNode;
-import org.liveontologies.proof.util.AcyclicDerivableFromProofStep;
-import org.liveontologies.proof.util.AcyclicProofNode;
-import org.liveontologies.proof.util.DelegatingProofStep;
-import org.liveontologies.proof.util.ExtendedProofNode;
-import org.liveontologies.proof.util.FilteredProofNode;
-import org.liveontologies.proof.util.ProofNode;
-import org.liveontologies.proof.util.ProofNodeDerivabilityChecker;
-import org.liveontologies.proof.util.ProofStep;
-
 class AcyclicDerivableFromProofNode<C> extends AcyclicProofNode<C> {
 
 	private final Set<? extends C> statedAxioms_;
+
+	private final DerivabilityChecker<ProofNode<C>> checker_ = new ProofNodeDerivabilityChecker<C>();
 
 	AcyclicDerivableFromProofNode(ProofNode<C> delegate,
 			AcyclicDerivableFromProofNode<C> parent,
@@ -55,27 +44,22 @@ class AcyclicDerivableFromProofNode<C> extends AcyclicProofNode<C> {
 	}
 
 	@Override
-	public Collection<ProofStep<C>> getInferences() {
-		ProofNode<C> testNode = new FilteredProofNode<C>(getDelegate(),
-				getBlockedNodes());
-		ProofNodeDerivabilityChecker<C> checker = new ProofNodeDerivabilityChecker<C>();
-		Collection<ProofStep<C>> result = new ArrayList<ProofStep<C>>();
-		inference_loop: for (ProofStep<C> step : testNode.getInferences()) {
-			for (ProofNode<C> premise : step.getPremises()) {
-				premise = new ExtendedProofNode<C>(premise, statedAxioms_);
-				if (!checker.isDerivable(premise)) {
-					continue inference_loop;
-				}
+	final void convert(AcyclicProofStep<C> step) {
+		ProofStep<C> delegate = step.getDelegate();
+		for (ProofNode<C> premise : delegate.getPremises()) {
+			if (!checker_.isDerivable(new ExtendedProofNode<C>(
+					new FilteredProofNode<C>(premise, getBlockedNodes()),
+					statedAxioms_))) {
+				return;
 			}
-			step = ((DelegatingProofStep<C>) step).getDelegate();
-			result.add(convert(step));
 		}
-		return result;
+		// all premises are derivable
+		convert(new AcyclicDerivableFromProofStep<C>(delegate, this,
+				statedAxioms_));
 	}
 
-	@Override
-	protected AcyclicDerivableFromProofStep<C> convert(ProofStep<C> step) {
-		return new AcyclicDerivableFromProofStep<C>(step, this, statedAxioms_);
+	void convert(AcyclicDerivableFromProofStep<C> step) {
+		super.convert(step);
 	}
 
 }

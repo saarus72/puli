@@ -1,10 +1,5 @@
 package org.liveontologies.proof.util;
 
-import org.liveontologies.proof.util.ConvertedProofStep;
-import org.liveontologies.proof.util.DerivableProofNode;
-import org.liveontologies.proof.util.ProofNode;
-import org.liveontologies.proof.util.ProofStep;
-
 /*-
  * #%L
  * OWL API Proof Extension
@@ -29,13 +24,21 @@ import org.liveontologies.proof.util.ProofStep;
 
 class DerivableProofStep<C> extends ConvertedProofStep<C> {
 
-	DerivableProofStep(ProofStep<C> delegate) {
+	private final DerivabilityChecker<ProofNode<C>> checker_;
+
+	DerivableProofStep(ProofStep<C> delegate,
+			DerivabilityChecker<ProofNode<C>> checker) {
 		super(delegate);
+		this.checker_ = checker;
+	}
+
+	DerivabilityChecker<ProofNode<C>> getDerivabilityChecker() {
+		return checker_;
 	}
 
 	@Override
 	protected DerivableProofNode<C> convert(ProofNode<C> premise) {
-		return new DerivableProofNode<C>(premise);
+		return new DerivableProofNode<C>(premise, checker_);
 	}
 
 }

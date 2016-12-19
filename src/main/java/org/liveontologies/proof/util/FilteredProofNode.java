@@ -22,15 +22,8 @@ package org.liveontologies.proof.util;
  * #L%
  */
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Set;
 
-import org.liveontologies.proof.util.ConvertedProofNode;
-import org.liveontologies.proof.util.FilteredProofNode;
-import org.liveontologies.proof.util.FilteredProofStep;
-import org.liveontologies.proof.util.ProofNode;
-import org.liveontologies.proof.util.ProofStep;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,23 +42,20 @@ class FilteredProofNode<C> extends ConvertedProofNode<C> {
 	}
 
 	@Override
-	public Collection<ProofStep<C>> getInferences() {
-		Collection<ProofStep<C>> result = new ArrayList<ProofStep<C>>();
-		inference_loop: for (ProofStep<C> inf : getDelegate().getInferences()) {
-			for (ProofNode<C> premise : inf.getPremises()) {
-				if (forbidden_.contains(premise)) {
-					LOGGER_.trace("{}: ignored: {} is forbiden", inf, premise);
-					continue inference_loop;
-				}
+	final void convert(ConvertedProofStep<C> step) {
+		ProofStep<C> delegate = step.getDelegate();
+		for (ProofNode<C> premise : delegate.getPremises()) {
+			if (forbidden_.contains(premise)) {
+				LOGGER_.trace("{}: ignored: {} is forbiden", delegate, premise);
+				return;
 			}
-			result.add(convert(inf));
 		}
-		return result;
+		// else
+		convert(new FilteredProofStep<C>(delegate, forbidden_));
 	}
 
-	@Override
-	protected FilteredProofStep<C> convert(ProofStep<C> inf) {
-		return new FilteredProofStep<C>(inf, forbidden_);
+	void convert(FilteredProofStep<C> step) {
+		super.convert(step);
 	}
 
 }

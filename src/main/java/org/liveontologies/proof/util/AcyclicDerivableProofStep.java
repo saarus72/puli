@@ -1,9 +1,6 @@
 package org.liveontologies.proof.util;
 
-import org.liveontologies.proof.util.AcyclicDerivableProofNode;
-import org.liveontologies.proof.util.AcyclicProofStep;
-import org.liveontologies.proof.util.ProofNode;
-import org.liveontologies.proof.util.ProofStep;
+import java.util.List;
 
 /*-
  * #%L
@@ -32,6 +29,12 @@ class AcyclicDerivableProofStep<C> extends AcyclicProofStep<C> {
 	AcyclicDerivableProofStep(ProofStep<C> delegate,
 			AcyclicDerivableProofNode<C> conclusion) {
 		super(delegate, conclusion);
+	}
+
+	@Override
+	public List<ProofNode<C>> getPremises() {
+		System.err.println(this + ": get premises");
+		return super.getPremises();
 	}
 
 	@Override

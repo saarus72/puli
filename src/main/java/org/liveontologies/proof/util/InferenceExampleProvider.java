@@ -22,35 +22,15 @@ package org.liveontologies.proof.util;
  * #L%
  */
 
-import java.util.ArrayList;
-import java.util.Collection;
+public interface InferenceExampleProvider<C> {
 
-class ConvertedProofNode<C> extends DelegatingProofNode<C> {
-
-	private Collection<ProofStep<C>> inferences_;
-
-	protected ConvertedProofNode(ProofNode<C> delegate) {
-		super(delegate);
-	}
-
-	@Override
-	public Collection<ProofStep<C>> getInferences() {
-		if (inferences_ == null) {
-			Collection<? extends ProofStep<C>> original = super.getInferences();
-			inferences_ = new ArrayList<ProofStep<C>>(original.size());
-			for (ProofStep<C> step : original) {
-				convert(step);
-			}
-		}
-		return inferences_;
-	}
-
-	void convert(ProofStep<C> step) {
-		convert(new ConvertedProofStep<C>(step));
-	}
-
-	void convert(ConvertedProofStep<C> step) {
-		inferences_.add(step);
-	}
+	/**
+	 * @param inference
+	 * 
+	 * @return an example of the given inference, which can be used for
+	 *         explanation purpose. Usually it is an inference instantiated with
+	 *         some generic parameters. If {@code null}, no example is provided.
+	 */
+	public Inference<C> getExample(Inference<C> inference);
 
 }

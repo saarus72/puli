@@ -1,10 +1,5 @@
 package org.liveontologies.proof.util;
 
-import org.liveontologies.proof.util.AcyclicProofNode;
-import org.liveontologies.proof.util.ConvertedProofStep;
-import org.liveontologies.proof.util.ProofNode;
-import org.liveontologies.proof.util.ProofStep;
-
 /*-
  * #%L
  * OWL API Proof Extension
@@ -27,7 +22,7 @@ import org.liveontologies.proof.util.ProofStep;
  * #L%
  */
 
-abstract class AcyclicProofStep<C> extends ConvertedProofStep<C> {
+class AcyclicProofStep<C> extends ConvertedProofStep<C> {
 
 	private final AcyclicProofNode<C> conclusion_;
 
@@ -42,6 +37,8 @@ abstract class AcyclicProofStep<C> extends ConvertedProofStep<C> {
 	}
 
 	@Override
-	protected abstract AcyclicProofNode<C> convert(ProofNode<C> node);
+	protected AcyclicProofNode<C> convert(ProofNode<C> node) {
+		return new AcyclicProofNode<C>(node, conclusion_);
+	}
 
 }

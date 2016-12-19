@@ -1,7 +1,5 @@
 package org.liveontologies.proof.util;
 
-import org.liveontologies.proof.util.Delegator;
-
 /*-
  * #%L
  * OWL API Proof Extension
@@ -39,6 +37,9 @@ public class Delegator<D> {
 	private final D delegate_;
 
 	Delegator(D delegate) {
+		if (delegate == null) {
+			throw new NullPointerException("Delegate cannot be null!");
+		}
 		this.delegate_ = delegate;
 	}
 

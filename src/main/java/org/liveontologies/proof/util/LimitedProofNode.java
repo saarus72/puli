@@ -22,12 +22,11 @@ package org.liveontologies.proof.util;
  * #L%
  */
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 class LimitedProofNode<C> extends ConvertedProofNode<C> {
 
 	private final int inferenceLimit_;
+
+	private int inferenceCount_ = 0;
 
 	LimitedProofNode(ProofNode<C> delegate, int inferenceLimit) {
 		super(delegate);
@@ -39,23 +38,16 @@ class LimitedProofNode<C> extends ConvertedProofNode<C> {
 	}
 
 	@Override
-	public Collection<ProofStep<C>> getInferences() {
-		// cut original inferences after a limit
-		Collection<ProofStep<C>> result = new ArrayList<ProofStep<C>>();
-		int steps = 0;
-		for (ProofStep<C> step : getDelegate().getInferences()) {
-			result.add(convert(step));
-			steps++;
-			if (steps == inferenceLimit_) {
-				break;
-			}
+	final void convert(ConvertedProofStep<C> step) {
+		if (inferenceCount_ < inferenceLimit_) {
+			convert(new LimitedProofStep<C>(step.getDelegate(),
+					inferenceLimit_));
+			inferenceCount_++;
 		}
-		return result;
 	}
 
-	@Override
-	protected LimitedProofStep<C> convert(ProofStep<C> inf) {
-		return new LimitedProofStep<C>(inf, inferenceLimit_);
+	void convert(LimitedProofStep<C> step) {
+		super.convert(step);
 	}
 
 }

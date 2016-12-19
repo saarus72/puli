@@ -22,19 +22,9 @@ package org.liveontologies.proof.util;
  * #L%
  */
 
-import java.util.ArrayList;
-import java.util.Collection;
-
-import org.liveontologies.proof.util.AcyclicDerivableProofNode;
-import org.liveontologies.proof.util.AcyclicDerivableProofStep;
-import org.liveontologies.proof.util.AcyclicProofNode;
-import org.liveontologies.proof.util.DelegatingProofStep;
-import org.liveontologies.proof.util.FilteredProofNode;
-import org.liveontologies.proof.util.ProofNode;
-import org.liveontologies.proof.util.ProofNodeDerivabilityChecker;
-import org.liveontologies.proof.util.ProofStep;
-
 class AcyclicDerivableProofNode<C> extends AcyclicProofNode<C> {
+
+	private final DerivabilityChecker<ProofNode<C>> checker_ = new ProofNodeDerivabilityChecker<C>();
 
 	AcyclicDerivableProofNode(ProofNode<C> delegate,
 			AcyclicDerivableProofNode<C> parent) {
@@ -42,30 +32,24 @@ class AcyclicDerivableProofNode<C> extends AcyclicProofNode<C> {
 	}
 
 	AcyclicDerivableProofNode(ProofNode<C> delegate) {
-		super(delegate);
+		this(delegate, null);
 	}
 
 	@Override
-	public Collection<ProofStep<C>> getInferences() {
-		ProofNode<C> testNode = new FilteredProofNode<C>(getDelegate(),
-				getBlockedNodes());
-		ProofNodeDerivabilityChecker<C> checker = new ProofNodeDerivabilityChecker<C>();
-		Collection<ProofStep<C>> result = new ArrayList<ProofStep<C>>();
-		inference_loop: for (ProofStep<C> step : testNode.getInferences()) {
-			for (ProofNode<C> premise : step.getPremises()) {
-				if (!checker.isDerivable(premise)) {
-					continue inference_loop;
-				}
+	final void convert(AcyclicProofStep<C> step) {
+		ProofStep<C> delegate = step.getDelegate();
+		for (ProofNode<C> premise : delegate.getPremises()) {
+			if (!checker_.isDerivable(
+					new FilteredProofNode<C>(premise, getBlockedNodes()))) {
+				return;
 			}
-			step = ((DelegatingProofStep<C>) step).getDelegate();
-			result.add(convert(step));
 		}
-		return result;
+		// all premises are derivable
+		convert(new AcyclicDerivableProofStep<C>(delegate, this));
 	}
 
-	@Override
-	protected AcyclicDerivableProofStep<C> convert(ProofStep<C> step) {
-		return new AcyclicDerivableProofStep<C>(step, this);
+	void convert(AcyclicDerivableProofStep<C> step) {
+		super.convert(step);
 	}
 
 }

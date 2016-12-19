@@ -22,41 +22,37 @@ package org.liveontologies.proof.util;
  * #L%
  */
 
-import java.util.ArrayList;
-import java.util.Collection;
-
-import org.liveontologies.proof.util.ConvertedProofNode;
-import org.liveontologies.proof.util.DerivableProofStep;
-import org.liveontologies.proof.util.ProofNode;
-import org.liveontologies.proof.util.ProofNodeDerivabilityChecker;
-import org.liveontologies.proof.util.ProofStep;
-
 class DerivableProofNode<C> extends ConvertedProofNode<C> {
 
-	DerivableProofNode(ProofNode<C> delegate) {
+	private final DerivabilityChecker<ProofNode<C>> checker_;
+
+	DerivableProofNode(ProofNode<C> delegate,
+			DerivabilityChecker<ProofNode<C>> checker) {
 		super(delegate);
+		this.checker_ = checker;
+	}
+
+	DerivableProofNode(ProofNode<C> delegate) {
+		this(delegate, new ProofNodeDerivabilityChecker<C>());
+	}
+
+	DerivabilityChecker<ProofNode<C>> getDerivabilityChecker() {
+		return checker_;
 	}
 
 	@Override
-	public Collection<ProofStep<C>> getInferences() {
-		// converting original inferences that have only derivable premises
-		Collection<ProofStep<C>> result = new ArrayList<ProofStep<C>>();
-		ProofNodeDerivabilityChecker<C> checker = new ProofNodeDerivabilityChecker<C>();
-		inference_loop: for (ProofStep<C> step : getDelegate()
-				.getInferences()) {
-			for (ProofNode<C> premise : step.getPremises()) {
-				if (!checker.isDerivable(premise)) {
-					continue inference_loop;
-				}
+	final void convert(ConvertedProofStep<C> step) {
+		ProofStep<C> delegate = step.getDelegate();
+		for (ProofNode<C> premise : delegate.getPremises()) {
+			if (!checker_.isDerivable(premise)) {
+				return;
 			}
-			result.add(convert(step));
 		}
-		return result;
+		convert(new DerivableProofStep<C>(delegate, checker_));
 	}
 
-	@Override
-	protected DerivableProofStep<C> convert(ProofStep<C> inf) {
-		return new DerivableProofStep<C>(inf);
+	void convert(DerivableProofStep<C> step) {
+		super.convert(step);
 	}
 
 }

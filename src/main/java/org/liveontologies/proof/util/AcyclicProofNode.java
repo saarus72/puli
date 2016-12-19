@@ -25,21 +25,29 @@ package org.liveontologies.proof.util;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.liveontologies.proof.util.AcyclicProofNode;
-import org.liveontologies.proof.util.ConvertedProofNode;
-import org.liveontologies.proof.util.ProofNode;
-
-abstract class AcyclicProofNode<C> extends ConvertedProofNode<C> {
+class AcyclicProofNode<C> extends ConvertedProofNode<C> {
 
 	private final AcyclicProofNode<C> parent_;
+
+	private final Set<ProofNode<C>> blockedNodes_;
 
 	AcyclicProofNode(ProofNode<C> delegate, AcyclicProofNode<C> parent) {
 		super(delegate);
 		this.parent_ = parent;
+		blockedNodes_ = new HashSet<ProofNode<C>>();
+		AcyclicProofNode<C> blocked = this;
+		do {
+			blockedNodes_.add(blocked.getDelegate());
+			blocked = blocked.parent_;
+		} while (blocked != null);
 	}
 
 	AcyclicProofNode(ProofNode<C> delegate) {
 		this(delegate, null);
+	}
+
+	AcyclicProofNode<C> getParent() {
+		return parent_;
 	}
 
 	/**
@@ -48,13 +56,23 @@ abstract class AcyclicProofNode<C> extends ConvertedProofNode<C> {
 	 *         inferences
 	 */
 	Set<ProofNode<C>> getBlockedNodes() {
-		Set<ProofNode<C>> result = new HashSet<ProofNode<C>>();
-		AcyclicProofNode<C> node = this;
-		do {
-			result.add(node.getDelegate());
-			node = node.parent_;
-		} while (node != null);
-		return result;
+		return blockedNodes_;
+	}
+
+	@Override
+	final void convert(ConvertedProofStep<C> step) {
+		ProofStep<C> delegate = step.getDelegate();
+		for (ProofNode<C> premise : delegate.getPremises()) {
+			if (blockedNodes_.contains(premise)) {
+				return;
+			}
+		}
+		// else
+		convert(new AcyclicProofStep<C>(delegate, this));
+	}
+
+	void convert(AcyclicProofStep<C> step) {
+		super.convert(step);
 	}
 
 }

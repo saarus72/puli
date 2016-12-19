@@ -27,13 +27,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import org.liveontologies.proof.util.ConvertedProofNode;
-import org.liveontologies.proof.util.ConvertedProofStep;
-import org.liveontologies.proof.util.ExtendedProofStep;
-import org.liveontologies.proof.util.Inference;
-import org.liveontologies.proof.util.ProofNode;
-import org.liveontologies.proof.util.ProofStep;
-
 class ExtendedProofNode<C> extends ConvertedProofNode<C>
 		implements ProofStep<C> {
 
@@ -54,15 +47,19 @@ class ExtendedProofNode<C> extends ConvertedProofNode<C>
 	}
 
 	@Override
-	protected ConvertedProofStep<C> convert(ProofStep<C> step) {
-		return new ExtendedProofStep<C>(step, statedAxioms_);
+	final void convert(ConvertedProofStep<C> step) {
+		convert(new ExtendedProofStep<C>(step.getDelegate(), statedAxioms_));
+	}
+
+	void convert(ExtendedProofStep<C> step) {
+		super.convert(step);
 	}
 
 	/** implementation of {@link ProofStep} */
 
 	@Override
 	public String getName() {
-		return "Asserted Axiom";
+		return AssertedConclusionInference.NAME;
 	}
 
 	@Override
@@ -76,9 +73,8 @@ class ExtendedProofNode<C> extends ConvertedProofNode<C>
 	}
 
 	@Override
-	public Inference<C> getExample() {
-		// this inference should not be displayed
-		return null;
+	public Inference<C> getInference() {
+		return new AssertedConclusionInference<C>(getMember());
 	}
 
 }

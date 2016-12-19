@@ -24,8 +24,6 @@ package org.liveontologies.proof.util;
 
 import java.util.Collection;
 
-import org.liveontologies.proof.util.Inference;
-
 /**
  * An object from which one can retrieve inferences deriving conclusions.
  * 

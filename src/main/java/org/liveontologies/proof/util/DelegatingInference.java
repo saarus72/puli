@@ -22,35 +22,28 @@ package org.liveontologies.proof.util;
  * #L%
  */
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 
-class ConvertedProofNode<C> extends DelegatingProofNode<C> {
+public class DelegatingInference<C> extends Delegator<Inference<C>>
+		implements Inference<C> {
 
-	private Collection<ProofStep<C>> inferences_;
-
-	protected ConvertedProofNode(ProofNode<C> delegate) {
+	DelegatingInference(Inference<C> delegate) {
 		super(delegate);
 	}
 
 	@Override
-	public Collection<ProofStep<C>> getInferences() {
-		if (inferences_ == null) {
-			Collection<? extends ProofStep<C>> original = super.getInferences();
-			inferences_ = new ArrayList<ProofStep<C>>(original.size());
-			for (ProofStep<C> step : original) {
-				convert(step);
-			}
-		}
-		return inferences_;
+	public String getName() {
+		return getDelegate().getName();
 	}
 
-	void convert(ProofStep<C> step) {
-		convert(new ConvertedProofStep<C>(step));
+	@Override
+	public C getConclusion() {
+		return getDelegate().getConclusion();
 	}
 
-	void convert(ConvertedProofStep<C> step) {
-		inferences_.add(step);
+	@Override
+	public List<? extends C> getPremises() {
+		return getDelegate().getPremises();
 	}
 
 }

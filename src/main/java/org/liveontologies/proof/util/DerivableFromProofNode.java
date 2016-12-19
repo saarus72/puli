@@ -1,8 +1,5 @@
 package org.liveontologies.proof.util;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 /*-
  * #%L
  * OWL API Proof Extension
@@ -27,41 +24,32 @@ import java.util.Collection;
 
 import java.util.Set;
 
-import org.liveontologies.proof.util.ConvertedProofNode;
-import org.liveontologies.proof.util.DelegatingProofStep;
-import org.liveontologies.proof.util.DerivableFromProofStep;
-import org.liveontologies.proof.util.DerivableProofNode;
-import org.liveontologies.proof.util.ExtendedProofNode;
-import org.liveontologies.proof.util.ProofNode;
-import org.liveontologies.proof.util.ProofStep;
+class DerivableFromProofNode<C> extends DerivableProofNode<C> {
 
-class DerivableFromProofNode<C> extends ConvertedProofNode<C> {
-
-	private final Set<? extends C> statedAxioms_;
+	DerivableFromProofNode(ProofNode<C> delegate,
+			DerivabilityChecker<ProofNode<C>> checker) {
+		super(delegate, checker);
+	}
 
 	DerivableFromProofNode(ProofNode<C> delegate,
 			Set<? extends C> statedAxioms) {
-		super(delegate);
-		this.statedAxioms_ = statedAxioms;
+		this(new ExtendedProofNode<C>(delegate, statedAxioms),
+				new ProofNodeDerivabilityChecker<C>());
 	}
 
 	@Override
-	public Collection<ProofStep<C>> getInferences() {
-		ProofNode<C> testNode = new ExtendedProofNode<C>(getDelegate(),
-				statedAxioms_);
-		testNode = new DerivableProofNode<C>(testNode);
-		Collection<ProofStep<C>> result = new ArrayList<ProofStep<C>>();
-		for (ProofStep<C> step : testNode.getInferences()) {
-			step = ((DelegatingProofStep<C>) step).getDelegate();
-			step = ((DelegatingProofStep<C>) step).getDelegate();
-			result.add(convert(step));
+	final void convert(DerivableProofStep<C> step) {
+		ProofStep<C> delegate = step.getDelegate();
+		if (delegate.getName() == AssertedConclusionInference.NAME) {
+			return;
 		}
-		return result;
+		// else
+		convert(new DerivableFromProofStep<C>(delegate,
+				getDerivabilityChecker()));
 	}
 
-	@Override
-	protected DerivableFromProofStep<C> convert(ProofStep<C> step) {
-		return new DerivableFromProofStep<C>(step, statedAxioms_);
+	void convert(DerivableFromProofStep<C> step) {
+		super.convert(step);
 	}
 
 }

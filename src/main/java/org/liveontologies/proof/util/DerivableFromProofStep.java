@@ -22,26 +22,16 @@ package org.liveontologies.proof.util;
  * #L%
  */
 
-import java.util.Set;
-
-import org.liveontologies.proof.util.ConvertedProofStep;
-import org.liveontologies.proof.util.DerivableFromProofNode;
-import org.liveontologies.proof.util.ProofNode;
-import org.liveontologies.proof.util.ProofStep;
-
-class DerivableFromProofStep<C> extends ConvertedProofStep<C> {
-
-	private final Set<? extends C> statedAxioms_;
+class DerivableFromProofStep<C> extends DerivableProofStep<C> {
 
 	DerivableFromProofStep(ProofStep<C> delegate,
-			Set<? extends C> statedAxioms) {
-		super(delegate);
-		this.statedAxioms_ = statedAxioms;
+			DerivabilityChecker<ProofNode<C>> checker) {
+		super(delegate, checker);
 	}
 
 	@Override
 	protected DerivableFromProofNode<C> convert(ProofNode<C> premise) {
-		return new DerivableFromProofNode<C>(premise, statedAxioms_);
+		return new DerivableFromProofNode<C>(premise, getDerivabilityChecker());
 	}
 
 }

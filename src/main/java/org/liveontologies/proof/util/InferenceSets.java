@@ -22,35 +22,25 @@ package org.liveontologies.proof.util;
  * #L%
  */
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 
-class ConvertedProofNode<C> extends DelegatingProofNode<C> {
+public class InferenceSets {
 
-	private Collection<ProofStep<C>> inferences_;
+	@SuppressWarnings("rawtypes")
+	public static InferenceSet EMPTY_INFERENCE_SET = new InferenceSet() {
 
-	protected ConvertedProofNode(ProofNode<C> delegate) {
-		super(delegate);
-	}
-
-	@Override
-	public Collection<ProofStep<C>> getInferences() {
-		if (inferences_ == null) {
-			Collection<? extends ProofStep<C>> original = super.getInferences();
-			inferences_ = new ArrayList<ProofStep<C>>(original.size());
-			for (ProofStep<C> step : original) {
-				convert(step);
-			}
+		@Override
+		public Collection<? extends Inference> getInferences(
+				Object conclusion) {
+			return Collections.emptySet();
 		}
-		return inferences_;
-	}
+	};
 
-	void convert(ProofStep<C> step) {
-		convert(new ConvertedProofStep<C>(step));
-	}
+	@SuppressWarnings("unchecked")
+	public static <C> InferenceSet<C> emptyInferenceSet() {
+		return (InferenceSet<C>) EMPTY_INFERENCE_SET;
 
-	void convert(ConvertedProofStep<C> step) {
-		inferences_.add(step);
 	}
 
 }
