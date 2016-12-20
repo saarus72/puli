@@ -34,6 +34,7 @@ class ExtendedProofNode<C> extends ConvertedProofNode<C>
 
 	ExtendedProofNode(ProofNode<C> delegate, Set<? extends C> statedAxioms) {
 		super(delegate);
+		Util.checkNotNull(statedAxioms);
 		this.statedAxioms_ = statedAxioms;
 	}
 

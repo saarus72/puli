@@ -24,11 +24,6 @@ package org.liveontologies.proof.util;
 
 import java.util.Set;
 
-import org.liveontologies.proof.util.ConvertedProofStep;
-import org.liveontologies.proof.util.FilteredProofNode;
-import org.liveontologies.proof.util.ProofNode;
-import org.liveontologies.proof.util.ProofStep;
-
 class FilteredProofStep<C> extends ConvertedProofStep<C> {
 
 	private final Set<? extends ProofNode<C>> forbidden_;
@@ -36,6 +31,7 @@ class FilteredProofStep<C> extends ConvertedProofStep<C> {
 	FilteredProofStep(ProofStep<C> delegate,
 			Set<? extends ProofNode<C>> forbidden) {
 		super(delegate);
+		Util.checkNotNull(forbidden);
 		this.forbidden_ = forbidden;
 	}
 

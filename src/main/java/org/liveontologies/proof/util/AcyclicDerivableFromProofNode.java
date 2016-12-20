@@ -34,6 +34,7 @@ class AcyclicDerivableFromProofNode<C> extends AcyclicProofNode<C> {
 			AcyclicDerivableFromProofNode<C> parent,
 			Set<? extends C> statedAxioms) {
 		super(delegate, parent);
+		Util.checkNotNull(statedAxioms);
 		this.statedAxioms_ = statedAxioms;
 	}
 

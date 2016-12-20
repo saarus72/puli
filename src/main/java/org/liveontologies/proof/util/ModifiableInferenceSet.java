@@ -22,29 +22,18 @@ package org.liveontologies.proof.util;
  * #L%
  */
 
-import java.util.Collection;
-import java.util.Collections;
+public interface ModifiableInferenceSet<C> extends InferenceSet<C> {
 
-import org.liveontologies.proof.util.ProofNode;
-import org.liveontologies.proof.util.ProofStep;
+	/**
+	 * Add the given inference to this {@link InferenceSet}
+	 * 
+	 * @param inference
+	 */
+	void add(Inference<C> inference);
 
-public class LeafProofNode<C> implements ProofNode<C> {
-
-	private final C member_;
-
-	public LeafProofNode(C member) {
-		Util.checkNotNull(member);
-		this.member_ = member;
-	}
-
-	@Override
-	public C getMember() {
-		return member_;
-	}
-
-	@Override
-	public Collection<? extends ProofStep<C>> getInferences() {
-		return Collections.emptySet();
-	}
+	/**
+	 * Remove all inferences from this {@link InferenceSet}
+	 */
+	void clear();
 
 }

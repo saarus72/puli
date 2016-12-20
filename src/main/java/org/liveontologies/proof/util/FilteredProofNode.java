@@ -38,6 +38,7 @@ class FilteredProofNode<C> extends ConvertedProofNode<C> {
 	FilteredProofNode(ProofNode<C> delegate,
 			Set<? extends ProofNode<C>> forbidden) {
 		super(delegate);
+		Util.checkNotNull(forbidden);
 		this.forbidden_ = forbidden;
 	}
 

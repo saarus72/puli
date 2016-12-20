@@ -24,18 +24,13 @@ package org.liveontologies.proof.util;
 
 import java.util.Set;
 
-import org.liveontologies.proof.util.ConvertedProofNode;
-import org.liveontologies.proof.util.ConvertedProofStep;
-import org.liveontologies.proof.util.ExtendedProofNode;
-import org.liveontologies.proof.util.ProofNode;
-import org.liveontologies.proof.util.ProofStep;
-
 class ExtendedProofStep<C> extends ConvertedProofStep<C> {
 
 	private final Set<? extends C> statedAxioms_;
 
 	ExtendedProofStep(ProofStep<C> delegate, Set<? extends C> statedAxioms) {
 		super(delegate);
+		Util.checkNotNull(statedAxioms);
 		this.statedAxioms_ = statedAxioms;
 	}
 

@@ -22,32 +22,29 @@ package org.liveontologies.proof.util;
  * #L%
  */
 
-import java.util.Collections;
 import java.util.List;
 
-/**
- * A special inference representing that a conclusion is derivable from no
- * premises; usually it means that the conclusion is preset in the initial set
- * from which other conclusions are derived.
- * 
- * @author Yevgeny Kazakov
- *
- * @param <C>
- */
-public class AssertedConclusionInference<C> implements Inference<C> {
+public class BaseInference<C> implements Inference<C> {
 
-	public static String NAME = "Asserted Conclusion";
+	private final String name_;
 
 	private final C conclusion_;
 
-	public AssertedConclusionInference(C conclusion) {
+	private final List<? extends C> premises_;
+
+	public BaseInference(String name, C conclusion,
+			List<? extends C> premises) {
+		Util.checkNotNull(name);
 		Util.checkNotNull(conclusion);
+		Util.checkNotNull(premises);
+		this.name_ = name;
 		this.conclusion_ = conclusion;
+		this.premises_ = premises;
 	}
 
 	@Override
 	public String getName() {
-		return NAME;
+		return name_;
 	}
 
 	@Override
@@ -57,7 +54,30 @@ public class AssertedConclusionInference<C> implements Inference<C> {
 
 	@Override
 	public List<? extends C> getPremises() {
-		return Collections.emptyList();
+		return premises_;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (o instanceof BaseInference<?>) {
+			BaseInference<?> other = (BaseInference<?>) o;
+			return (name_.equals(other.name_)
+					&& conclusion_.equals(other.conclusion_)
+					&& premises_.equals(other.premises_));
+		}
+		// else
+		return false;
+	}
+
+	@Override
+	public int hashCode() {
+		return BaseInference.class.hashCode() + name_.hashCode()
+				+ conclusion_.hashCode() + premises_.hashCode();
+	}
+
+	@Override
+	public String toString() {
+		return conclusion_ + " -| " + premises_ + " by " + name_;
 	}
 
 }

@@ -29,6 +29,7 @@ class DerivableProofStep<C> extends ConvertedProofStep<C> {
 	DerivableProofStep(ProofStep<C> delegate,
 			DerivabilityChecker<ProofNode<C>> checker) {
 		super(delegate);
+		Util.checkNotNull(checker);
 		this.checker_ = checker;
 	}
 

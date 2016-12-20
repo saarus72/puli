@@ -40,6 +40,11 @@ import java.util.Set;
  */
 public class ProofNodes {
 
+	public static <C> ProofNode<C> create(InferenceSet<C> inferences,
+			C member) {
+		return new BaseProofNode<C>(inferences, member);
+	}
+
 	public static <C> ProofNode<C> addStatedAxioms(ProofNode<C> node,
 			Set<C> statedAxioms) {
 		return new ExtendedProofNode<C>(node, statedAxioms);

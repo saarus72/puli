@@ -29,6 +29,7 @@ class DerivableProofNode<C> extends ConvertedProofNode<C> {
 	DerivableProofNode(ProofNode<C> delegate,
 			DerivabilityChecker<ProofNode<C>> checker) {
 		super(delegate);
+		Util.checkNotNull(checker);
 		this.checker_ = checker;
 	}
 

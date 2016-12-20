@@ -22,37 +22,41 @@ package org.liveontologies.proof.util;
  * #L%
  */
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
+ * An {@link InferenceSet}, changes in which can be monitored
+ * 
  * @author Yevgeny Kazakov
  *
  * @param <C>
- *            the type of conclusions and premises this inference operate with
- *
  */
-public class MockInference<C> extends BaseInference<C> {
+public interface DynamicInferenceSet<C> extends InferenceSet<C> {
+
+	public void addListener(ChangeListener listener);
+
+	public void removeListener(ChangeListener listener);
 
 	/**
-	 * use {@link #create(String, Object)} or
-	 * {@link #create(String, Object, List)}
-	 * 
-	 * @param name
-	 * @param conclusion
-	 * @param premises
+	 * Release resources occupied by this {@link InferenceSet}; it should not be
+	 * used after calling of this method
 	 */
-	private MockInference(String name, C conclusion, List<C> premises) {
-		super(name, conclusion, premises);
-	}
+	public void dispose();
 
-	public static <C> MockInference<C> create(String name, C conclusion,
-			List<C> premises) {
-		return new MockInference<C>(name, conclusion, premises);
-	}
+	/**
+	 * A listener to monitor if inferences have changed
+	 * 
+	 * @author Yevgeny Kazakov
+	 *
+	 */
+	public interface ChangeListener {
 
-	public static <C> MockInference<C> create(String name, C conclusion) {
-		return new MockInference<C>(name, conclusion, new ArrayList<C>());
+		/**
+		 * called whenever the inferences already returned for some conclusions
+		 * by {@link InferenceSet#getInferences(Object)} may have changed, i.e.,
+		 * calling this method again with the same input may produce a different
+		 * result
+		 */
+		void inferencesChanged();
+
 	}
 
 }

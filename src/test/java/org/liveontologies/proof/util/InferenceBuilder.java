@@ -25,34 +25,40 @@ package org.liveontologies.proof.util;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author Yevgeny Kazakov
- *
- * @param <C>
- *            the type of conclusions and premises this inference operate with
- *
- */
-public class MockInference<C> extends BaseInference<C> {
+public class InferenceBuilder<C> {
 
-	/**
-	 * use {@link #create(String, Object)} or
-	 * {@link #create(String, Object, List)}
-	 * 
-	 * @param name
-	 * @param conclusion
-	 * @param premises
-	 */
-	private MockInference(String name, C conclusion, List<C> premises) {
-		super(name, conclusion, premises);
+	private final String name_;
+
+	private C conclusion_;
+
+	private final List<C> premises_ = new ArrayList<C>();
+
+	protected InferenceBuilder(String name) {
+		this.name_ = name;
 	}
 
-	public static <C> MockInference<C> create(String name, C conclusion,
-			List<C> premises) {
-		return new MockInference<C>(name, conclusion, premises);
+	public static <C> InferenceBuilder<C> create(String name) {
+		return new InferenceBuilder<C>(name);
 	}
 
-	public static <C> MockInference<C> create(String name, C conclusion) {
-		return new MockInference<C>(name, conclusion, new ArrayList<C>());
+	InferenceBuilder<C> conclusion(C conclusion) {
+		Util.checkNotNull(conclusion);
+		if (conclusion_ != null) {
+			throw new RuntimeException(
+					"Conclusion already assigned: " + conclusion);
+		}
+		this.conclusion_ = conclusion;
+		return this;
+	}
+
+	InferenceBuilder<C> premise(C premise) {
+		Util.checkNotNull(premise);
+		premises_.add(premise);
+		return this;
+	}
+
+	Inference<C> build() {
+		return new BaseInference<C>(name_, conclusion_, premises_);
 	}
 
 }

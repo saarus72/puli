@@ -28,6 +28,7 @@ class AcyclicProofStep<C> extends ConvertedProofStep<C> {
 
 	AcyclicProofStep(ProofStep<C> delegate, AcyclicProofNode<C> conclusion) {
 		super(delegate);
+		Util.checkNotNull(conclusion);
 		this.conclusion_ = conclusion;
 	}
 

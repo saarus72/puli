@@ -44,20 +44,34 @@ import org.junit.Test;
 public class ProofTest {
 
 	@Test
+	public void inferenceSetTest() {
+		InferenceSetBuilder<Integer> b = InferenceSetBuilder.create();
+		b.conclusion(1).premise(2).add();
+		b.conclusion(2).premise(3).premise(4).add();
+		b.conclusion(2).premise(5).premise(6).add();
+		InferenceSet<Integer> is = b.build();
+		assertEquals(1, is.getInferences(1).size());
+		assertEquals(2, is.getInferences(2).size());
+		assertEquals(0, is.getInferences(3).size());
+	}
+
+	@Test
 	public void blockCyclicProof() throws Exception {
-		MockProof<String> proof = MockProof.create();
-		proof.conclusion("A ⊑ B").premise("A ⊑ B ⊓ C");
-		proof.conclusion("A ⊑ B").premise("A ⊑ C").premise("C ⊑ B");
-		proof.conclusion("A ⊑ C").premise("A ⊑ D").premise("D ⊑ C");
-		proof.conclusion("A ⊑ D").premise("A ⊑ B").premise("B ⊑ D");
+		InferenceSetBuilder<String> b = InferenceSetBuilder.create();
+		b.conclusion("A ⊑ B").premise("A ⊑ B ⊓ C").add();
+		b.conclusion("A ⊑ B").premise("A ⊑ C").premise("C ⊑ B").add();
+		b.conclusion("A ⊑ C").premise("A ⊑ D").premise("D ⊑ C").add();
+		b.conclusion("A ⊑ D").premise("A ⊑ B").premise("B ⊑ D").add();
+		InferenceSet<String> is = b.build();
 
 		Set<String> stated = new HashSet<String>(
 				Arrays.asList("A ⊑ B ⊓ C", "B ⊑ D", "D ⊑ C", "C ⊑ B"));
 
-		assertTrue(ProofNodes.isDerivable(proof.getNode("A ⊑ C"), stated));
+		assertTrue(
+				ProofNodes.isDerivable(ProofNodes.create(is, "A ⊑ C"), stated));
 
 		ProofNode<String> root = ProofNodes
-				.addStatedAxioms(proof.getNode("A ⊑ B"), stated);
+				.addStatedAxioms(ProofNodes.create(is, "A ⊑ B"), stated);
 
 		assertTrue(ProofNodes.isDerivable(root));
 
@@ -70,7 +84,7 @@ public class ProofTest {
 
 		// testing the same but using derivability "from" methods
 
-		root = proof.getNode("A ⊑ B");
+		root = ProofNodes.create(is, "A ⊑ B");
 		assertTrue(ProofNodes.isDerivable(root, stated));
 
 		assertEquals(2, ProofNodes.eliminateNotDerivable(root, stated)
@@ -84,15 +98,16 @@ public class ProofTest {
 
 	@Test
 	public void blockCyclicProof2() throws Exception {
-		MockProof<Integer> proof = MockProof.create();
-		proof.conclusion(0).premise(1).premise(2);
-		proof.conclusion(0).premise(3).premise(4);
-		proof.conclusion(2).premise(0).premise(0);
+		InferenceSetBuilder<Integer> b = InferenceSetBuilder.create();
+		b.conclusion(0).premise(1).premise(2).add();
+		b.conclusion(0).premise(3).premise(4).add();
+		b.conclusion(2).premise(0).premise(0).add();
+		BaseInferenceSet<Integer> is = b.build();
 
 		Set<Integer> stated = new HashSet<Integer>(Arrays.asList(1, 3, 4));
 
-		ProofNode<Integer> root = ProofNodes.addStatedAxioms(proof.getNode(0),
-				stated);
+		ProofNode<Integer> root = ProofNodes
+				.addStatedAxioms(ProofNodes.create(is, 0), stated);
 
 		assertTrue(ProofNodes.isDerivable(root));
 
@@ -106,7 +121,7 @@ public class ProofTest {
 
 		// the same using derivability "from"
 
-		root = proof.getNode(0);
+		root = ProofNodes.create(is, 0);
 
 		assertTrue(ProofNodes.isDerivable(root, stated));
 
@@ -121,17 +136,18 @@ public class ProofTest {
 
 	@Test
 	public void recursiveBlocking() throws Exception {
-		MockProof<Integer> proof = MockProof.create();
-		proof.conclusion(0).premise(1).premise(2);
-		proof.conclusion(1).premise(3).premise(4).premise(5);
-		proof.conclusion(3).premise(6).premise(7);
-		proof.conclusion(4).premise(8).premise(9);
+		InferenceSetBuilder<Integer> b = InferenceSetBuilder.create();
+		b.conclusion(0).premise(1).premise(2).add();
+		b.conclusion(1).premise(3).premise(4).premise(5).add();
+		b.conclusion(3).premise(6).premise(7).add();
+		b.conclusion(4).premise(8).premise(9).add();
+		BaseInferenceSet<Integer> is = b.build();
 
 		Set<Integer> stated = new HashSet<Integer>(
 				Arrays.asList(2, 5, 6, 7, 8, 9));
 
-		ProofNode<Integer> root = ProofNodes.addStatedAxioms(proof.getNode(0),
-				stated);
+		ProofNode<Integer> root = ProofNodes
+				.addStatedAxioms(ProofNodes.create(is, 0), stated);
 
 		assertEquals(1,
 				ProofNodes.eliminateNotDerivable(root).getInferences().size());
@@ -145,7 +161,7 @@ public class ProofTest {
 
 		stated.add(6);
 
-		root = proof.getNode(0);
+		root = ProofNodes.create(is, 0);
 
 		assertEquals(1, ProofNodes.eliminateNotDerivable(root, stated)
 				.getInferences().size());
@@ -161,7 +177,7 @@ public class ProofTest {
 		Random random = new Random();
 		long seed = random.nextLong();
 		random.setSeed(seed);
-		ProofNode<Integer> node = RandomProof.generate(random);
+		ProofNode<Integer> node = RandomProofNode.generate(random);
 
 		try {
 

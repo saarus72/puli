@@ -24,11 +24,6 @@ package org.liveontologies.proof.util;
 
 import java.util.Set;
 
-import org.liveontologies.proof.util.AcyclicDerivableFromProofNode;
-import org.liveontologies.proof.util.AcyclicProofStep;
-import org.liveontologies.proof.util.ProofNode;
-import org.liveontologies.proof.util.ProofStep;
-
 class AcyclicDerivableFromProofStep<C> extends AcyclicProofStep<C> {
 
 	private final Set<? extends C> statedAxioms_;
@@ -37,6 +32,7 @@ class AcyclicDerivableFromProofStep<C> extends AcyclicProofStep<C> {
 			AcyclicDerivableFromProofNode<C> conclusion,
 			Set<? extends C> statedAxioms) {
 		super(delegate, conclusion);
+		Util.checkNotNull(statedAxioms);
 		this.statedAxioms_ = statedAxioms;
 	}
 

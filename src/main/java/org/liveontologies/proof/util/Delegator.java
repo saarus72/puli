@@ -37,9 +37,7 @@ public class Delegator<D> {
 	private final D delegate_;
 
 	Delegator(D delegate) {
-		if (delegate == null) {
-			throw new NullPointerException("Delegate cannot be null!");
-		}
+		Util.checkNotNull(delegate);
 		this.delegate_ = delegate;
 	}
 

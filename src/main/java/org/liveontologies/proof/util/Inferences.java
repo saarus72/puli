@@ -22,29 +22,13 @@ package org.liveontologies.proof.util;
  * #L%
  */
 
-import java.util.Collection;
-import java.util.Collections;
+import java.util.List;
 
-import org.liveontologies.proof.util.ProofNode;
-import org.liveontologies.proof.util.ProofStep;
+public class Inferences {
 
-public class LeafProofNode<C> implements ProofNode<C> {
-
-	private final C member_;
-
-	public LeafProofNode(C member) {
-		Util.checkNotNull(member);
-		this.member_ = member;
-	}
-
-	@Override
-	public C getMember() {
-		return member_;
-	}
-
-	@Override
-	public Collection<? extends ProofStep<C>> getInferences() {
-		return Collections.emptySet();
+	public static <C> Inference<C> create(String name, C conclusion,
+			List<? extends C> premises) {
+		return new BaseInference<C>(name, conclusion, premises);
 	}
 
 }

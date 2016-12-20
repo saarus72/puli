@@ -105,6 +105,7 @@ public class InferenceDerivabilityChecker<C> implements DerivabilityChecker<C> {
 	private final Map<C, List<Iterator<? extends C>>> premiseIteratorsMap_ = new HashMap<C, List<Iterator<? extends C>>>();
 
 	public InferenceDerivabilityChecker(InferenceSet<C> inferences) {
+		Util.checkNotNull(inferences);
 		this.inferences_ = inferences;
 	}
 
