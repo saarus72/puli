@@ -36,8 +36,8 @@ public interface DynamicInferenceSet<C> extends InferenceSet<C> {
 	public void removeListener(ChangeListener listener);
 
 	/**
-	 * Release resources occupied by this {@link InferenceSet}; it should not be
-	 * used after calling of this method
+	 * Release external resources occupied by this {@link InferenceSet}. This
+	 * {@link InferenceSet} should not be used after calling of this method
 	 */
 	public void dispose();
 

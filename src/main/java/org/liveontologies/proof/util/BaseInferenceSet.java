@@ -77,7 +77,7 @@ public class BaseInferenceSet<C>
 	}
 
 	@Override
-	public void add(Inference<C> inference) {
+	public void produce(Inference<C> inference) {
 		LOGGER_.trace("{}: inference added", inference);
 		C conclusion = inference.getConclusion();
 		Collection<Inference<C>> existing = inferences_.get(conclusion);
@@ -86,7 +86,7 @@ public class BaseInferenceSet<C>
 			inferences_.put(conclusion, existing);
 		}
 		existing.add(inference);
-		if (queried_.remove(conclusion)) {
+		if (queried_.contains(conclusion)) {
 			fireChanged();
 		}
 	}
@@ -97,13 +97,15 @@ public class BaseInferenceSet<C>
 			return;
 		}
 		// else
-		LOGGER_.trace("{}: inferences cleared");
+		LOGGER_.trace("inferences cleared");
 		inferences_.clear();
-		queried_.clear();
-		fireChanged();
+		if (!queried_.isEmpty()) {
+			fireChanged();
+		}
 	}
 
 	protected void fireChanged() {
+		queried_.clear();
 		for (ChangeListener listener : listeners_) {
 			listener.inferencesChanged();
 		}

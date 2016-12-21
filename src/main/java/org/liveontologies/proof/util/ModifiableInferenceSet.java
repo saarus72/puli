@@ -22,14 +22,16 @@ package org.liveontologies.proof.util;
  * #L%
  */
 
-public interface ModifiableInferenceSet<C> extends InferenceSet<C> {
+public interface ModifiableInferenceSet<C>
+		extends InferenceSet<C>, Producer<Inference<C>> {
 
 	/**
 	 * Add the given inference to this {@link InferenceSet}
 	 * 
 	 * @param inference
 	 */
-	void add(Inference<C> inference);
+	@Override
+	void produce(Inference<C> inference);
 
 	/**
 	 * Remove all inferences from this {@link InferenceSet}

@@ -68,7 +68,7 @@ public class InferenceSetBuilder<C> {
 
 		Inference<C> add() {
 			Inference<C> inference = build();
-			inferenceSet_.add(inference);
+			inferenceSet_.produce(inference);
 			return inference;
 		}
 

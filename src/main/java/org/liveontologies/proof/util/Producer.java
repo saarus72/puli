@@ -22,28 +22,17 @@ package org.liveontologies.proof.util;
  * #L%
  */
 
-import java.util.Set;
+/**
+ * A general interface for object through which objects of a particular types
+ * can be produced
+ * 
+ * @author Yevgeny Kazakov
+ *
+ * @param <O>
+ *            the types of objects that can be produced by this {@link Producer}
+ */
+public interface Producer<O> {
 
-public class InferenceSets {
-
-	@SuppressWarnings("rawtypes")
-	public static DynamicInferenceSet EMPTY_INFERENCE_SET = new EmptyInferenceSet();
-
-	@SuppressWarnings("unchecked")
-	public static <C> DynamicInferenceSet<C> emptyInferenceSet() {
-		return (DynamicInferenceSet<C>) EMPTY_INFERENCE_SET;
-	}
-
-	public static <C> boolean isDerivable(InferenceSet<C> inferenceSet,
-			C conclusion) {
-		return ProofNodes
-				.isDerivable(ProofNodes.create(inferenceSet, conclusion));
-	}
-
-	public static <C> boolean isDerivable(InferenceSet<C> inferenceSet,
-			C conclusion, Set<C> statedAxioms) {
-		return ProofNodes.isDerivable(
-				ProofNodes.create(inferenceSet, conclusion), statedAxioms);
-	}
+	void produce(O object);
 
 }

@@ -22,28 +22,26 @@ package org.liveontologies.proof.util;
  * #L%
  */
 
-import java.util.Set;
+public class DelegatingDynamicInferenceSet<C, S extends DynamicInferenceSet<C>>
+		extends DelegatingInferenceSet<C, S> implements DynamicInferenceSet<C> {
 
-public class InferenceSets {
-
-	@SuppressWarnings("rawtypes")
-	public static DynamicInferenceSet EMPTY_INFERENCE_SET = new EmptyInferenceSet();
-
-	@SuppressWarnings("unchecked")
-	public static <C> DynamicInferenceSet<C> emptyInferenceSet() {
-		return (DynamicInferenceSet<C>) EMPTY_INFERENCE_SET;
+	DelegatingDynamicInferenceSet(S delegate) {
+		super(delegate);
 	}
 
-	public static <C> boolean isDerivable(InferenceSet<C> inferenceSet,
-			C conclusion) {
-		return ProofNodes
-				.isDerivable(ProofNodes.create(inferenceSet, conclusion));
+	@Override
+	public void addListener(DynamicInferenceSet.ChangeListener listener) {
+		getDelegate().addListener(listener);
 	}
 
-	public static <C> boolean isDerivable(InferenceSet<C> inferenceSet,
-			C conclusion, Set<C> statedAxioms) {
-		return ProofNodes.isDerivable(
-				ProofNodes.create(inferenceSet, conclusion), statedAxioms);
+	@Override
+	public void removeListener(DynamicInferenceSet.ChangeListener listener) {
+		getDelegate().removeListener(listener);
+	}
+
+	@Override
+	public void dispose() {
+		getDelegate().dispose();
 	}
 
 }
