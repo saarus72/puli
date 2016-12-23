@@ -33,7 +33,7 @@ class DerivableFromProofNode<C> extends DerivableProofNode<C> {
 
 	DerivableFromProofNode(ProofNode<C> delegate,
 			Set<? extends C> statedAxioms) {
-		this(new ExtendedProofNode<C>(delegate, statedAxioms),
+		this(new AddAssertedProofNode<C>(delegate, statedAxioms),
 				new ProofNodeDerivabilityChecker<C>());
 	}
 

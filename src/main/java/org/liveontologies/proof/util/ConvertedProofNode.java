@@ -22,10 +22,10 @@ package org.liveontologies.proof.util;
  * #L%
  */
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 
-class ConvertedProofNode<C> extends DelegatingProofNode<C> {
+public class ConvertedProofNode<C> extends DelegatingProofNode<C> {
 
 	private Collection<ProofStep<C>> inferences_;
 
@@ -37,7 +37,7 @@ class ConvertedProofNode<C> extends DelegatingProofNode<C> {
 	public Collection<ProofStep<C>> getInferences() {
 		if (inferences_ == null) {
 			Collection<? extends ProofStep<C>> original = super.getInferences();
-			inferences_ = new ArrayList<ProofStep<C>>(original.size());
+			inferences_ = new HashSet<ProofStep<C>>(original.size());
 			for (ProofStep<C> step : original) {
 				convert(step);
 			}
@@ -45,11 +45,11 @@ class ConvertedProofNode<C> extends DelegatingProofNode<C> {
 		return inferences_;
 	}
 
-	void convert(ProofStep<C> step) {
+	final void convert(ProofStep<C> step) {
 		convert(new ConvertedProofStep<C>(step));
 	}
 
-	void convert(ConvertedProofStep<C> step) {
+	protected void convert(ConvertedProofStep<C> step) {
 		inferences_.add(step);
 	}
 

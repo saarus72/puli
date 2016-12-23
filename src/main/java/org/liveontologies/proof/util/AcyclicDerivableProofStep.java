@@ -33,7 +33,6 @@ class AcyclicDerivableProofStep<C> extends AcyclicProofStep<C> {
 
 	@Override
 	public List<ProofNode<C>> getPremises() {
-		System.err.println(this + ": get premises");
 		return super.getPremises();
 	}
 

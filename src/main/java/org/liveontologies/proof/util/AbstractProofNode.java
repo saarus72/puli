@@ -22,53 +22,38 @@ package org.liveontologies.proof.util;
  * #L%
  */
 
-import java.util.List;
+public abstract class AbstractProofNode<C> implements ProofNode<C> {
 
-public class DelegatingProofStep<C> extends Delegator<ProofStep<C>>
-		implements ProofStep<C> {
+	private final C member_;
 
-	private int hashCode_ = 0;
-
-	protected DelegatingProofStep(ProofStep<C> delegate) {
-		super(delegate);
+	public AbstractProofNode(C member) {
+		Util.checkNotNull(member);
+		this.member_ = member;
 	}
 
 	@Override
-	public String getName() {
-		return getDelegate().getName();
-	}
-
-	@Override
-	public ProofNode<C> getConclusion() {
-		return getDelegate().getConclusion();
-	}
-
-	@Override
-	public List<? extends ProofNode<C>> getPremises() {
-		return getDelegate().getPremises();
-	}
-
-	@Override
-	public Inference<C> getInference() {
-		return getDelegate().getInference();
+	public C getMember() {
+		return member_;
 	}
 
 	@Override
 	public boolean equals(Object o) {
-		return Inferences.equals(this, o);
+		if (o instanceof AbstractProofNode) {
+			AbstractProofNode<?> other = (AbstractProofNode<?>) o;
+			return member_.equals(other.member_);
+		}
+		// else
+		return false;
 	}
 
 	@Override
-	public synchronized int hashCode() {
-		if (hashCode_ == 0) {
-			hashCode_ = Inferences.hashCode(this);
-		}
-		return hashCode_;
+	public int hashCode() {
+		return AbstractProofNode.class.hashCode() + member_.hashCode();
 	}
 
 	@Override
 	public String toString() {
-		return Inferences.toString(this);
+		return member_.toString();
 	}
 
 }

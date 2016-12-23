@@ -22,15 +22,24 @@ package org.liveontologies.proof.util;
  * #L%
  */
 
-public interface InferenceExampleProvider<C> {
+class RemoveAssertedProofNode<C> extends ConvertedProofNode<C> {
 
-	/**
-	 * @param inference
-	 * 
-	 * @return an example of the given inference, which can be used for
-	 *         explanation purpose. Usually it is an inference instantiated with
-	 *         some generic parameters. If {@code null}, no example is provided.
-	 */
-	public Inference<C> getExample(Inference<C> inference);
+	RemoveAssertedProofNode(ProofNode<C> delegate) {
+		super(delegate);
+	}
+
+	@Override
+	protected final void convert(ConvertedProofStep<C> step) {
+		if (step.getName() == AssertedConclusionInference.NAME) {
+			// ignore asserted inferences
+			return;
+		}
+		// else
+		convert(new RemoveAssertedProofStep<C>(step.getDelegate()));
+	}
+
+	void convert(RemoveAssertedProofStep<C> step) {
+		super.convert(step);
+	}
 
 }

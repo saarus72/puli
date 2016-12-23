@@ -24,10 +24,6 @@ package org.liveontologies.proof.util;
 
 import java.util.Collection;
 
-import org.liveontologies.proof.util.Delegator;
-import org.liveontologies.proof.util.ProofNode;
-import org.liveontologies.proof.util.ProofStep;
-
 public class DelegatingProofNode<C> extends Delegator<ProofNode<C>>
 		implements ProofNode<C> {
 

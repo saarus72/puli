@@ -22,26 +22,21 @@ package org.liveontologies.proof.util;
  * #L%
  */
 
-import java.util.List;
+import java.util.Set;
 
-import org.liveontologies.proof.util.DelegatingProofStep;
-import org.liveontologies.proof.util.ProofNode;
-import org.liveontologies.proof.util.ProofStep;
+class AddAssertedProofStep<C> extends ConvertedProofStep<C> {
 
-public class CachingProofStep<C> extends DelegatingProofStep<C> {
+	private final Set<? extends C> assertedAxioms_;
 
-	private List<? extends ProofNode<C>> premises_ = null;
-
-	protected CachingProofStep(ProofStep<C> delegate) {
+	AddAssertedProofStep(ProofStep<C> delegate, Set<? extends C> assertedAxioms) {
 		super(delegate);
+		Util.checkNotNull(assertedAxioms);
+		this.assertedAxioms_ = assertedAxioms;
 	}
 
 	@Override
-	public List<? extends ProofNode<C>> getPremises() {
-		if (premises_ == null) {
-			premises_ = getDelegate().getPremises();
-		}
-		return premises_;
+	protected ConvertedProofNode<C> convert(ProofNode<C> node) {
+		return new AddAssertedProofNode<C>(node, assertedAxioms_);
 	}
 
 }

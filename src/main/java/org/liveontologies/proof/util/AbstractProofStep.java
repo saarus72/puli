@@ -22,21 +22,26 @@ package org.liveontologies.proof.util;
  * #L%
  */
 
-import java.util.Set;
+public abstract class AbstractProofStep<C> implements ProofStep<C> {
 
-class ExtendedProofStep<C> extends ConvertedProofStep<C> {
+	protected int hashCode = 0;
 
-	private final Set<? extends C> statedAxioms_;
-
-	ExtendedProofStep(ProofStep<C> delegate, Set<? extends C> statedAxioms) {
-		super(delegate);
-		Util.checkNotNull(statedAxioms);
-		this.statedAxioms_ = statedAxioms;
+	@Override
+	public boolean equals(Object o) {
+		return Inferences.equals(this, o);
 	}
 
 	@Override
-	protected ConvertedProofNode<C> convert(ProofNode<C> node) {
-		return new ExtendedProofNode<C>(node, statedAxioms_);
+	public synchronized int hashCode() {
+		if (hashCode == 0) {
+			hashCode = Inferences.hashCode(this);
+		}
+		return hashCode;
+	}
+
+	@Override
+	public String toString() {
+		return Inferences.toString(this);
 	}
 
 }

@@ -25,19 +25,16 @@ package org.liveontologies.proof.util;
 import java.util.ArrayList;
 import java.util.Collection;
 
-class BaseProofNode<C> implements ProofNode<C> {
+class BaseProofNode<C> extends AbstractProofNode<C> {
 
 	private final InferenceSet<C> inferenceSet_;
-
-	private final C member_;
 
 	private Collection<ProofStep<C>> steps_ = null;
 
 	BaseProofNode(InferenceSet<C> inferences, C member) {
+		super(member);
 		Util.checkNotNull(inferences);
-		Util.checkNotNull(member);
 		this.inferenceSet_ = inferences;
-		this.member_ = member;
 	}
 
 	public InferenceSet<C> getInferenceSet() {
@@ -45,15 +42,10 @@ class BaseProofNode<C> implements ProofNode<C> {
 	}
 
 	@Override
-	public C getMember() {
-		return member_;
-	}
-
-	@Override
 	public Collection<? extends ProofStep<C>> getInferences() {
 		if (steps_ == null) {
 			Collection<? extends Inference<C>> original = inferenceSet_
-					.getInferences(member_);
+					.getInferences(getMember());
 			steps_ = new ArrayList<ProofStep<C>>(original.size());
 			for (Inference<C> inf : original) {
 				convert(inf);
@@ -70,7 +62,7 @@ class BaseProofNode<C> implements ProofNode<C> {
 	public boolean equals(Object o) {
 		if (o instanceof BaseProofNode) {
 			BaseProofNode<?> other = (BaseProofNode<?>) o;
-			return member_.equals(other.member_)
+			return getMember().equals(other.getMember())
 					&& inferenceSet_.equals(other.inferenceSet_);
 		}
 		// else
@@ -79,13 +71,8 @@ class BaseProofNode<C> implements ProofNode<C> {
 
 	@Override
 	public int hashCode() {
-		return BaseProofNode.class.hashCode() + member_.hashCode()
+		return BaseProofNode.class.hashCode() + getMember().hashCode()
 				+ inferenceSet_.hashCode();
-	}
-
-	@Override
-	public String toString() {
-		return member_.toString();
 	}
 
 }

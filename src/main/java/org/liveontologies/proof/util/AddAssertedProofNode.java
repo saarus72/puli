@@ -23,59 +23,38 @@ package org.liveontologies.proof.util;
  */
 
 import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 import java.util.Set;
 
-class ExtendedProofNode<C> extends ConvertedProofNode<C>
-		implements ProofStep<C> {
+class AddAssertedProofNode<C> extends ConvertedProofNode<C> {
 
-	private final Set<? extends C> statedAxioms_;
+	private final Set<? extends C> assertedAxioms_;
 
-	ExtendedProofNode(ProofNode<C> delegate, Set<? extends C> statedAxioms) {
+	AddAssertedProofNode(ProofNode<C> delegate,
+			Set<? extends C> assertedAxioms) {
 		super(delegate);
-		Util.checkNotNull(statedAxioms);
-		this.statedAxioms_ = statedAxioms;
+		Util.checkNotNull(assertedAxioms);
+		this.assertedAxioms_ = assertedAxioms;
 	}
 
 	@Override
 	public Collection<ProofStep<C>> getInferences() {
 		Collection<ProofStep<C>> result = super.getInferences();
-		if (statedAxioms_.contains(getMember())) {
-			result.add(this);
+		if (assertedAxioms_.contains(getMember())) {
+			result.add(new AssertedProofStep<C>(this));
 		}
 		return result;
 	}
 
 	@Override
-	final void convert(ConvertedProofStep<C> step) {
-		convert(new ExtendedProofStep<C>(step.getDelegate(), statedAxioms_));
+	protected final void convert(ConvertedProofStep<C> step) {
+		convert(new AddAssertedProofStep<C>(step.getDelegate(),
+				assertedAxioms_));
 	}
 
-	void convert(ExtendedProofStep<C> step) {
+	void convert(AddAssertedProofStep<C> step) {
 		super.convert(step);
 	}
 
 	/** implementation of {@link ProofStep} */
-
-	@Override
-	public String getName() {
-		return AssertedConclusionInference.NAME;
-	}
-
-	@Override
-	public ProofNode<C> getConclusion() {
-		return this;
-	}
-
-	@Override
-	public List<? extends ProofNode<C>> getPremises() {
-		return Collections.emptyList();
-	}
-
-	@Override
-	public Inference<C> getInference() {
-		return new AssertedConclusionInference<C>(getMember());
-	}
 
 }

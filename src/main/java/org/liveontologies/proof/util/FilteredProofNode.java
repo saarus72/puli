@@ -43,7 +43,7 @@ class FilteredProofNode<C> extends ConvertedProofNode<C> {
 	}
 
 	@Override
-	final void convert(ConvertedProofStep<C> step) {
+	protected final void convert(ConvertedProofStep<C> step) {
 		ProofStep<C> delegate = step.getDelegate();
 		for (ProofNode<C> premise : delegate.getPremises()) {
 			if (forbidden_.contains(premise)) {

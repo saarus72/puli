@@ -22,25 +22,26 @@ package org.liveontologies.proof.util;
  * #L%
  */
 
-import java.util.Set;
+public abstract class AbstractInference<C> implements Inference<C> {
 
-class AcyclicDerivableFromProofStep<C> extends AcyclicProofStep<C> {
+	protected int hash = 0;
 
-	private final Set<? extends C> statedAxioms_;
-
-	AcyclicDerivableFromProofStep(ProofStep<C> delegate,
-			AcyclicDerivableFromProofNode<C> conclusion,
-			Set<? extends C> statedAxioms) {
-		super(delegate, conclusion);
-		Util.checkNotNull(statedAxioms);
-		this.statedAxioms_ = statedAxioms;
+	@Override
+	public boolean equals(Object o) {
+		return Inferences.equals(this, o);
 	}
 
 	@Override
-	protected AcyclicDerivableFromProofNode<C> convert(ProofNode<C> premise) {
-		return new AcyclicDerivableFromProofNode<C>(premise,
-				(AcyclicDerivableFromProofNode<C>) getConclusion(),
-				statedAxioms_);
+	public synchronized int hashCode() {
+		if (hash == 0) {
+			hash = Inferences.hashCode(this);
+		}
+		return hash;
+	}
+
+	@Override
+	public String toString() {
+		return Inferences.toString(this);
 	}
 
 }

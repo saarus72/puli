@@ -31,4 +31,30 @@ public class Inferences {
 		return new BaseInference<C>(name, conclusion, premises);
 	}
 
+	public static <C> boolean equals(Inference<C> inference, Object o) {
+		if (o instanceof Inference<?>) {
+			Inference<?> other = (Inference<?>) o;
+			return (inference.getName().equals(other.getName())
+					&& inference.getConclusion().equals(other.getConclusion())
+					&& inference.getPremises().equals(other.getPremises()));
+		}
+		// else
+		return false;
+	}
+
+	public static <C> int hashCode(Inference<C> inference) {
+		if (inference == null) {
+			return 0;
+		}
+		return inference.getName().hashCode()
+				+ inference.getConclusion().hashCode()
+				+ inference.getPremises().hashCode();
+	}
+
+	public static <C> String toString(Inference<C> inference) {
+		Util.checkNotNull(inference);
+		return inference.getConclusion() + " -| " + inference.getPremises()
+				+ " by " + inference.getName();
+	}
+
 }

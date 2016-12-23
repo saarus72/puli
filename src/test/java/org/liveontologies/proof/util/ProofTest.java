@@ -71,7 +71,7 @@ public class ProofTest {
 				ProofNodes.isDerivable(ProofNodes.create(is, "A ⊑ C"), stated));
 
 		ProofNode<String> root = ProofNodes
-				.addStatedAxioms(ProofNodes.create(is, "A ⊑ B"), stated);
+				.addAssertedInferences(ProofNodes.create(is, "A ⊑ B"), stated);
 
 		assertTrue(ProofNodes.isDerivable(root));
 
@@ -107,7 +107,7 @@ public class ProofTest {
 		Set<Integer> stated = new HashSet<Integer>(Arrays.asList(1, 3, 4));
 
 		ProofNode<Integer> root = ProofNodes
-				.addStatedAxioms(ProofNodes.create(is, 0), stated);
+				.addAssertedInferences(ProofNodes.create(is, 0), stated);
 
 		assertTrue(ProofNodes.isDerivable(root));
 
@@ -147,7 +147,7 @@ public class ProofTest {
 				Arrays.asList(2, 5, 6, 7, 8, 9));
 
 		ProofNode<Integer> root = ProofNodes
-				.addStatedAxioms(ProofNodes.create(is, 0), stated);
+				.addAssertedInferences(ProofNodes.create(is, 0), stated);
 
 		assertEquals(1,
 				ProofNodes.eliminateNotDerivable(root).getInferences().size());

@@ -38,7 +38,7 @@ class LimitedProofNode<C> extends ConvertedProofNode<C> {
 	}
 
 	@Override
-	final void convert(ConvertedProofStep<C> step) {
+	protected final void convert(ConvertedProofStep<C> step) {
 		if (inferenceCount_ < inferenceLimit_) {
 			convert(new LimitedProofStep<C>(step.getDelegate(),
 					inferenceLimit_));

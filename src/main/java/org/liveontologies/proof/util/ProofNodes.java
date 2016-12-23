@@ -45,9 +45,13 @@ public class ProofNodes {
 		return new BaseProofNode<C>(inferences, member);
 	}
 
-	public static <C> ProofNode<C> addStatedAxioms(ProofNode<C> node,
-			Set<C> statedAxioms) {
-		return new ExtendedProofNode<C>(node, statedAxioms);
+	public static <C> ProofNode<C> addAssertedInferences(ProofNode<C> node,
+			Set<C> assertedAxioms) {
+		return new AddAssertedProofNode<C>(node, assertedAxioms);
+	}
+
+	public static <C> ProofNode<C> removeAssertedInferences(ProofNode<C> node) {
+		return new RemoveAssertedProofNode<C>(node);
 	}
 
 	public static <C> ProofNode<C> eliminateNotDerivable(ProofNode<C> node) {
@@ -59,12 +63,15 @@ public class ProofNodes {
 	}
 
 	public static <C> ProofNode<C> eliminateNotDerivable(ProofNode<C> node,
-			Set<C> statedAxioms) {
-		if (isDerivable(node, statedAxioms)) {
-			return new DerivableFromProofNode<C>(node, statedAxioms);
+			Set<C> assertedAxioms) {
+		node = addAssertedInferences(node, assertedAxioms);
+		if (!isDerivable(node)) {
+			return null;
 		}
 		// else
-		return null;
+		node = new DerivableProofNode<C>(node);
+		node = removeAssertedInferences(node);
+		return node;
 	}
 
 	public static <C> ProofNode<C> eliminateNotDerivableAndCycles(
@@ -77,12 +84,14 @@ public class ProofNodes {
 	}
 
 	public static <C> ProofNode<C> eliminateNotDerivableAndCycles(
-			ProofNode<C> node, Set<C> statedAxioms) {
-		if (isDerivable(node, statedAxioms)) {
-			return new AcyclicDerivableFromProofNode<C>(node, statedAxioms);
+			ProofNode<C> node, Set<C> assertedAxioms) {
+		node = addAssertedInferences(node, assertedAxioms);
+		node = eliminateNotDerivableAndCycles(node);
+		if (node == null) {
+			return null;
 		}
-		// else
-		return null;
+		node = removeAssertedInferences(node);
+		return node;
 	}
 
 	public static <C> ProofNode<C> limitInferencesPerNode(ProofNode<C> node,
@@ -90,18 +99,14 @@ public class ProofNodes {
 		return new LimitedProofNode<C>(node, limit);
 	}
 
-	public static <C> ProofNode<C> cache(ProofNode<C> node) {
-		return new CachingProofNode<C>(node);
-	}
-
 	public static <C> boolean isDerivable(ProofNode<C> node) {
 		return new ProofNodeDerivabilityChecker<C>().isDerivable(node);
 	}
 
 	public static <C> boolean isDerivable(ProofNode<C> node,
-			Set<C> statedAxioms) {
-		return new ProofNodeDerivabilityChecker<C>()
-				.isDerivable(new ExtendedProofNode<C>(node, statedAxioms));
+			Set<C> assertedAxioms) {
+		node = addAssertedInferences(node, assertedAxioms);
+		return isDerivable(node);
 	}
 
 	public static <C> String print(ProofNode<C> node) {

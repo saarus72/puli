@@ -25,7 +25,7 @@ package org.liveontologies.proof.util;
 import java.util.AbstractList;
 import java.util.List;
 
-class BaseProofStep<C> implements ProofStep<C> {
+class BaseProofStep<C> extends AbstractProofStep<C> {
 
 	private final InferenceSet<C> inferenceSet_;
 
@@ -76,28 +76,6 @@ class BaseProofStep<C> implements ProofStep<C> {
 
 	ProofNode<C> convert(C member) {
 		return new BaseProofNode<C>(inferenceSet_, member);
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (o instanceof BaseProofStep<?>) {
-			BaseProofStep<?> other = (BaseProofStep<?>) o;
-			return inference_.equals(other.inference_)
-					&& inferenceSet_.equals(other.inferenceSet_);
-		}
-		// else
-		return false;
-	}
-
-	@Override
-	public int hashCode() {
-		return BaseProofStep.class.hashCode() + inference_.hashCode()
-				+ inferenceSet_.hashCode();
-	}
-
-	@Override
-	public String toString() {
-		return inference_.toString();
 	}
 
 }

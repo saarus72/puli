@@ -24,7 +24,7 @@ package org.liveontologies.proof.util;
 
 import java.util.List;
 
-public class BaseInference<C> implements Inference<C> {
+public class BaseInference<C> extends AbstractInference<C> {
 
 	private final String name_;
 
@@ -55,29 +55,6 @@ public class BaseInference<C> implements Inference<C> {
 	@Override
 	public List<? extends C> getPremises() {
 		return premises_;
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (o instanceof BaseInference<?>) {
-			BaseInference<?> other = (BaseInference<?>) o;
-			return (name_.equals(other.name_)
-					&& conclusion_.equals(other.conclusion_)
-					&& premises_.equals(other.premises_));
-		}
-		// else
-		return false;
-	}
-
-	@Override
-	public int hashCode() {
-		return BaseInference.class.hashCode() + name_.hashCode()
-				+ conclusion_.hashCode() + premises_.hashCode();
-	}
-
-	@Override
-	public String toString() {
-		return conclusion_ + " -| " + premises_ + " by " + name_;
 	}
 
 }

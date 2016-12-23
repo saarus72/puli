@@ -22,26 +22,15 @@ package org.liveontologies.proof.util;
  * #L%
  */
 
-import java.util.Collection;
+class RemoveAssertedProofStep<C> extends ConvertedProofStep<C> {
 
-import org.liveontologies.proof.util.DelegatingProofNode;
-import org.liveontologies.proof.util.ProofNode;
-import org.liveontologies.proof.util.ProofStep;
-
-public class CachingProofNode<C> extends DelegatingProofNode<C> {
-
-	private Collection<? extends ProofStep<C>> inferences_ = null;
-
-	public CachingProofNode(ProofNode<C> delegate) {
+	RemoveAssertedProofStep(ProofStep<C> delegate) {
 		super(delegate);
 	}
 
 	@Override
-	public Collection<? extends ProofStep<C>> getInferences() {
-		if (inferences_ == null) {
-			inferences_ = getDelegate().getInferences();
-		}
-		return inferences_;
+	protected ConvertedProofNode<C> convert(ProofNode<C> node) {
+		return new RemoveAssertedProofNode<C>(node);
 	}
 
 }

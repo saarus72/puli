@@ -22,53 +22,35 @@ package org.liveontologies.proof.util;
  * #L%
  */
 
+import java.util.Collections;
 import java.util.List;
 
-public class DelegatingProofStep<C> extends Delegator<ProofStep<C>>
-		implements ProofStep<C> {
+public class AssertedProofStep<C> extends AbstractProofStep<C> {
 
-	private int hashCode_ = 0;
+	private final ProofNode<C> conclusion_;
 
-	protected DelegatingProofStep(ProofStep<C> delegate) {
-		super(delegate);
+	AssertedProofStep(ProofNode<C> conclusion) {
+		this.conclusion_ = conclusion;
 	}
 
 	@Override
 	public String getName() {
-		return getDelegate().getName();
+		return AssertedConclusionInference.NAME;
 	}
 
 	@Override
 	public ProofNode<C> getConclusion() {
-		return getDelegate().getConclusion();
+		return conclusion_;
 	}
 
 	@Override
 	public List<? extends ProofNode<C>> getPremises() {
-		return getDelegate().getPremises();
+		return Collections.emptyList();
 	}
 
 	@Override
 	public Inference<C> getInference() {
-		return getDelegate().getInference();
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		return Inferences.equals(this, o);
-	}
-
-	@Override
-	public synchronized int hashCode() {
-		if (hashCode_ == 0) {
-			hashCode_ = Inferences.hashCode(this);
-		}
-		return hashCode_;
-	}
-
-	@Override
-	public String toString() {
-		return Inferences.toString(this);
+		return new AssertedConclusionInference<C>(getConclusion().getMember());
 	}
 
 }

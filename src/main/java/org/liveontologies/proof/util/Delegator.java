@@ -46,7 +46,7 @@ public class Delegator<D> {
 	}
 
 	@Override
-	public final boolean equals(Object o) {
+	public boolean equals(Object o) {
 		if (o instanceof Delegator<?>) {
 			return delegate_.equals(((Delegator<?>) o).delegate_);
 		}
@@ -55,12 +55,12 @@ public class Delegator<D> {
 	}
 
 	@Override
-	public final int hashCode() {
+	public int hashCode() {
 		return delegate_.hashCode();
 	}
 
 	@Override
-	public final String toString() {
+	public String toString() {
 		return delegate_.toString();
 	}
 
