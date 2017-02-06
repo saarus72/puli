@@ -34,5 +34,21 @@ package org.liveontologies.proof.util;
 public interface Producer<O> {
 
 	void produce(O object);
+	
+	static class Dummy<O> implements Producer<O> {
+		
+		private static Producer<Object> INSTANCE_ = new Dummy<Object>();
+
+		@SuppressWarnings("unchecked")
+		public static <O> Producer<O> get() {
+			return (Producer<O>) INSTANCE_;
+		}
+		
+		@Override
+		public void produce(O object) {
+			// no-op
+		}
+		
+	}
 
 }
