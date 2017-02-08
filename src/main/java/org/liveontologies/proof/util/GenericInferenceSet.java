@@ -4,7 +4,7 @@
  * $Id:$
  * $HeadURL:$
  * %%
- * Copyright (C) 2014 - 2016 Live Ontologies Project
+ * Copyright (C) 2014 - 2017 Live Ontologies Project
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,25 +21,20 @@
  */
 package org.liveontologies.proof.util;
 
-public interface ModifiableInferenceSet<C, I extends Inference<C>>
-		extends GenericInferenceSet<C, I>, Producer<I> {
+import java.util.Collection;
 
-	/**
-	 * Add the given inference to this {@link InferenceSet}
-	 * 
-	 * @param inference
-	 */
+/**
+ * @author Peter Skocovsky
+ *
+ * @param <C>
+ *            The type of conclusion and premises used by the inferences.
+ * @param <I>
+ *            The type of the inferences.
+ */
+public interface GenericInferenceSet<C, I extends Inference<C>>
+		extends InferenceSet<C> {
+
 	@Override
-	void produce(I inference);
-
-	/**
-	 * Remove all inferences from this {@link InferenceSet}
-	 */
-	void clear();
-
-	public static interface Projection<C>
-			extends ModifiableInferenceSet<C, Inference<C>> {
-		// Empty.
-	}
+	Collection<? extends I> getInferences(C conclusion);
 
 }

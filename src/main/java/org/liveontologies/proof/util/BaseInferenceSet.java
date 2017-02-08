@@ -1,5 +1,3 @@
-package org.liveontologies.proof.util;
-
 /*-
  * #%L
  * OWL API Proof Extension
@@ -21,6 +19,7 @@ package org.liveontologies.proof.util;
  * limitations under the License.
  * #L%
  */
+package org.liveontologies.proof.util;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -38,28 +37,32 @@ import org.slf4j.LoggerFactory;
  * A base implementation for inference sets
  * 
  * @author Yevgeny Kazakov
+ * @author Peter Skocovsky
  *
  * @param <C>
+ *            The type of conclusion and premises used by the inferences.
+ * @param <I>
+ *            The type of the inferences.
  */
-public class BaseInferenceSet<C>
-		implements ModifiableInferenceSet<C>, DynamicInferenceSet<C> {
+public class BaseInferenceSet<C, I extends Inference<C>>
+		implements ModifiableInferenceSet<C, I>, DynamicInferenceSet<C> {
 
 	private static final Logger LOGGER_ = LoggerFactory
 			.getLogger(BaseInferenceSet.class);
 
-	private final Map<C, Collection<Inference<C>>> inferences_ = new HashMap<C, Collection<Inference<C>>>();
+	private final Map<C, Collection<I>> inferences_ = new HashMap<C, Collection<I>>();
 
 	/**
-	 * conclusion for which {@link #get(Object)} was called and the result did
-	 * not change since then
+	 * conclusion for which {@link #getInferences(Object)} was called and the
+	 * result did not change since then
 	 */
 	private final Set<C> queried_ = new HashSet<C>();
 
 	private final List<ChangeListener> listeners_ = new ArrayList<ChangeListener>();
 
 	@Override
-	public Collection<? extends Inference<C>> getInferences(C conclusion) {
-		Collection<? extends Inference<C>> result = inferences_.get(conclusion);
+	public Collection<? extends I> getInferences(C conclusion) {
+		Collection<? extends I> result = inferences_.get(conclusion);
 		if (result == null) {
 			result = Collections.emptyList();
 		}
@@ -77,12 +80,12 @@ public class BaseInferenceSet<C>
 	}
 
 	@Override
-	public void produce(Inference<C> inference) {
+	public void produce(final I inference) {
 		LOGGER_.trace("{}: inference added", inference);
-		C conclusion = inference.getConclusion();
-		Collection<Inference<C>> existing = inferences_.get(conclusion);
+		final C conclusion = inference.getConclusion();
+		Collection<I> existing = inferences_.get(conclusion);
 		if (existing == null) {
-			existing = new ArrayList<Inference<C>>();
+			existing = new ArrayList<I>();
 			inferences_.put(conclusion, existing);
 		}
 		existing.add(inference);
@@ -111,28 +114,14 @@ public class BaseInferenceSet<C>
 		}
 	}
 
-	/**
-	 * Checks if all premises of the given {@link Inference} are conclusions of
-	 * some inferences stored in this {@link InferenceSet} and throws a
-	 * {@link RuntimeException} otherwise
-	 * 
-	 * @param inference
-	 */
-	protected void checkDerived(Inference<C> inference) {
-		List<? extends C> premises = inference.getPremises();
-		Set<C> derived = inferences_.keySet();
-		for (int i = 0; i < premises.size(); i++) {
-			C premise = premises.get(i);
-			if (!derived.contains(premise)) {
-				throw new RuntimeException(
-						inference + ": premise not derived: " + premise);
-			}
-		}
-	}
-
 	@Override
 	public void dispose() {
 		// no-op
+	}
+
+	public static class Projection<C>
+			extends BaseInferenceSet<C, Inference<C>> {
+		// Empty.
 	}
 
 }

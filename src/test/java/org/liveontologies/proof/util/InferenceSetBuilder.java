@@ -1,5 +1,3 @@
-package org.liveontologies.proof.util;
-
 /*-
  * #%L
  * OWL API Proof Extension
@@ -21,12 +19,13 @@ package org.liveontologies.proof.util;
  * limitations under the License.
  * #L%
  */
+package org.liveontologies.proof.util;
 
 public class InferenceSetBuilder<C> {
 
 	private static final String INF_NAME = "inf";
 
-	BaseInferenceSet<C> inferenceSet_ = new BaseInferenceSet<C>();
+	BaseInferenceSet.Projection<C> inferenceSet_ = new BaseInferenceSet.Projection<C>();
 
 	/**
 	 * use {@link #create()}
@@ -38,7 +37,7 @@ public class InferenceSetBuilder<C> {
 		return new InferenceSetBuilder<C>();
 	}
 
-	BaseInferenceSet<C> build() {
+	BaseInferenceSet.Projection<C> build() {
 		return inferenceSet_;
 	}
 

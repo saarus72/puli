@@ -1,5 +1,3 @@
-package org.liveontologies.proof.util;
-
 /*-
  * #%L
  * OWL API Proof Extension
@@ -21,6 +19,7 @@ package org.liveontologies.proof.util;
  * limitations under the License.
  * #L%
  */
+package org.liveontologies.proof.util;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -102,7 +101,7 @@ public class ProofTest {
 		b.conclusion(0).premise(1).premise(2).add();
 		b.conclusion(0).premise(3).premise(4).add();
 		b.conclusion(2).premise(0).premise(0).add();
-		BaseInferenceSet<Integer> is = b.build();
+		BaseInferenceSet.Projection<Integer> is = b.build();
 
 		Set<Integer> stated = new HashSet<Integer>(Arrays.asList(1, 3, 4));
 
@@ -141,7 +140,7 @@ public class ProofTest {
 		b.conclusion(1).premise(3).premise(4).premise(5).add();
 		b.conclusion(3).premise(6).premise(7).add();
 		b.conclusion(4).premise(8).premise(9).add();
-		BaseInferenceSet<Integer> is = b.build();
+		BaseInferenceSet.Projection<Integer> is = b.build();
 
 		Set<Integer> stated = new HashSet<Integer>(
 				Arrays.asList(2, 5, 6, 7, 8, 9));
