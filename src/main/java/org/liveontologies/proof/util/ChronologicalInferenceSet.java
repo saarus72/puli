@@ -1,6 +1,6 @@
 /*-
  * #%L
- * OWL API Proof Extension
+ * Proof Utility Library
  * $Id:$
  * $HeadURL:$
  * %%

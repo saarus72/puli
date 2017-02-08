@@ -1,18 +1,10 @@
-/**
- * 
- */
-package org.liveontologies.proof.util;
-
-import java.util.HashSet;
-import java.util.Set;
-
-/*
+/*-
  * #%L
- * OWL API Proofs Model
+ * Proof Utility Library
  * $Id:$
  * $HeadURL:$
  * %%
- * Copyright (C) 2011 - 2014 Department of Computer Science, University of Oxford
+ * Copyright (C) 2014 - 2017 Live Ontologies Project
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,6 +19,10 @@ import java.util.Set;
  * limitations under the License.
  * #L%
  */
+package org.liveontologies.proof.util;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * A collection of static utilities for manipulation with {@link ProofNode}

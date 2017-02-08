@@ -1,10 +1,10 @@
 /*-
  * #%L
- * OWL API Proof Extension
+ * Proof Utility Library
  * $Id:$
  * $HeadURL:$
  * %%
- * Copyright (C) 2014 - 2016 Live Ontologies Project
+ * Copyright (C) 2014 - 2017 Live Ontologies Project
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
