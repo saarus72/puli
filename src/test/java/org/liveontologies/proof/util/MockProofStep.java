@@ -26,6 +26,10 @@ import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.liveontologies.puli.Inference;
+import org.liveontologies.puli.ProofNode;
+import org.liveontologies.puli.ProofStep;
+
 /**
  * @author Pavel Klinov pavel.klinov@uni-ulm.de
  * 

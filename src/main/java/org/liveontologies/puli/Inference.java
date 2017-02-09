@@ -19,41 +19,36 @@
  * limitations under the License.
  * #L%
  */
-package org.liveontologies.proof.util;
+package org.liveontologies.puli;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.liveontologies.puli.BaseInference;
-
 /**
+ * A general type of inferences, which can be used in proofs. If all premises of
+ * an inference are provable, then one can prove its conclusion by applying this
+ * inference.
+ * 
  * @author Yevgeny Kazakov
  *
  * @param <C>
  *            the type of conclusions and premises this inference operate with
- *
  */
-public class MockInference<C> extends BaseInference<C> {
+public interface Inference<C> {
 
 	/**
-	 * use {@link #create(String, Object)} or
-	 * {@link #create(String, Object, List)}
-	 * 
-	 * @param name
-	 * @param conclusion
-	 * @param premises
+	 * @return the name of this inference
 	 */
-	private MockInference(String name, C conclusion, List<C> premises) {
-		super(name, conclusion, premises);
-	}
+	String getName();
 
-	public static <C> MockInference<C> create(String name, C conclusion,
-			List<C> premises) {
-		return new MockInference<C>(name, conclusion, premises);
-	}
+	/**
+	 * @return the conclusion that is derived using this inference
+	 */
+	C getConclusion();
 
-	public static <C> MockInference<C> create(String name, C conclusion) {
-		return new MockInference<C>(name, conclusion, new ArrayList<C>());
-	}
+	/**
+	 * @return the premises from which the conclusion of this inference is
+	 *         derived
+	 */
+	List<? extends C> getPremises();
 
 }

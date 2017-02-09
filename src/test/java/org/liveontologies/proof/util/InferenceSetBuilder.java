@@ -21,6 +21,9 @@
  */
 package org.liveontologies.proof.util;
 
+import org.liveontologies.puli.BaseInferenceSet;
+import org.liveontologies.puli.Inference;
+
 public class InferenceSetBuilder<C> {
 
 	private static final String INF_NAME = "inf";

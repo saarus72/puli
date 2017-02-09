@@ -25,8 +25,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.liveontologies.proof.util.ProofNode;
-import org.liveontologies.proof.util.ProofStep;
+import org.liveontologies.puli.ProofNode;
+import org.liveontologies.puli.ProofStep;
 
 /**
  * @author Pavel Klinov pavel.klinov@uni-ulm.de

@@ -19,41 +19,25 @@
  * limitations under the License.
  * #L%
  */
-package org.liveontologies.proof.util;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.liveontologies.puli.BaseInference;
+package org.liveontologies.puli;
 
 /**
+ * Represents an inference step in which a conclusion represented by a proof
+ * node is obtained from premises represented by other proof nodes.
+ * 
  * @author Yevgeny Kazakov
  *
  * @param <C>
  *            the type of conclusions and premises this inference operate with
- *
  */
-public class MockInference<C> extends BaseInference<C> {
+public interface ProofStep<C> extends Inference<ProofNode<C>> {
 
 	/**
-	 * use {@link #create(String, Object)} or
-	 * {@link #create(String, Object, List)}
-	 * 
-	 * @param name
-	 * @param conclusion
-	 * @param premises
+	 * @return the inference used in this {@link ProofStep}. The conclusion and
+	 *         premises of the inference should be the respective members of the
+	 *         conclusion and premises of this {@link ProofStep}, and the name
+	 *         should be the same.
 	 */
-	private MockInference(String name, C conclusion, List<C> premises) {
-		super(name, conclusion, premises);
-	}
-
-	public static <C> MockInference<C> create(String name, C conclusion,
-			List<C> premises) {
-		return new MockInference<C>(name, conclusion, premises);
-	}
-
-	public static <C> MockInference<C> create(String name, C conclusion) {
-		return new MockInference<C>(name, conclusion, new ArrayList<C>());
-	}
+	Inference<C> getInference();
 
 }

@@ -24,8 +24,8 @@ package org.liveontologies.proof.util;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.liveontologies.proof.util.ProofNode;
-import org.liveontologies.proof.util.ProofStep;
+import org.liveontologies.puli.ProofNode;
+import org.liveontologies.puli.ProofStep;
 
 public class MockProof<C> {
 

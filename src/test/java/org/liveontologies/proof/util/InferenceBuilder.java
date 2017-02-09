@@ -24,6 +24,10 @@ package org.liveontologies.proof.util;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.liveontologies.puli.BaseInference;
+import org.liveontologies.puli.Inference;
+import org.liveontologies.puli.Util;
+
 public class InferenceBuilder<C> {
 
 	private final String name_;

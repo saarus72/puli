@@ -27,6 +27,9 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
+import org.liveontologies.puli.ProofNode;
+import org.liveontologies.puli.ProofNodes;
+
 public class RandomProofNode {
 
 	public static ProofNode<Integer> generate(Random random, int maxConclusions,

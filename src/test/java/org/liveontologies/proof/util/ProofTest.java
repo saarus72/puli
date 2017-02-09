@@ -32,6 +32,11 @@ import java.util.Random;
 import java.util.Set;
 
 import org.junit.Test;
+import org.liveontologies.puli.BaseInferenceSet;
+import org.liveontologies.puli.InferenceSet;
+import org.liveontologies.puli.ProofNode;
+import org.liveontologies.puli.ProofNodes;
+import org.liveontologies.puli.ProofStep;
 
 /**
  * @author Pavel Klinov
