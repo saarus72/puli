@@ -45,6 +45,7 @@ public class CombinedInferenceSet<C, I extends Inference<C>>
 
 	public CombinedInferenceSet(
 			final Iterable<? extends GenericInferenceSet<C, I>> inferenceSets) {
+		Util.checkNotNull(inferenceSets);
 		this.inferenceSets_ = inferenceSets;
 	}
 

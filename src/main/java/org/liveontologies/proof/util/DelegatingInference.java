@@ -26,7 +26,7 @@ import java.util.List;
 public class DelegatingInference<C> extends Delegator<Inference<C>>
 		implements Inference<C> {
 
-	DelegatingInference(Inference<C> delegate) {
+	public DelegatingInference(Inference<C> delegate) {
 		super(delegate);
 	}
 

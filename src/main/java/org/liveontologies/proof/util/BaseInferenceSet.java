@@ -44,8 +44,8 @@ import org.slf4j.LoggerFactory;
  * @param <I>
  *            The type of the inferences.
  */
-public class BaseInferenceSet<C, I extends Inference<C>>
-		implements ModifiableInferenceSet<C, I>, DynamicInferenceSet<C> {
+public class BaseInferenceSet<C, I extends Inference<C>> implements
+		ModifiableInferenceSet<C, I>, GenericDynamicInferenceSet<C, I> {
 
 	private static final Logger LOGGER_ = LoggerFactory
 			.getLogger(BaseInferenceSet.class);

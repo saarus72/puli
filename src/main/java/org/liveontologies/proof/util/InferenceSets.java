@@ -26,11 +26,11 @@ import java.util.Set;
 public class InferenceSets {
 
 	@SuppressWarnings("rawtypes")
-	public static DynamicInferenceSet EMPTY_INFERENCE_SET = new EmptyInferenceSet();
+	public static GenericDynamicInferenceSet EMPTY_INFERENCE_SET = new EmptyInferenceSet();
 
 	@SuppressWarnings("unchecked")
-	public static <C> DynamicInferenceSet<C> emptyInferenceSet() {
-		return (DynamicInferenceSet<C>) EMPTY_INFERENCE_SET;
+	public static <C, I extends Inference<C>> GenericDynamicInferenceSet<C, I> emptyInferenceSet() {
+		return (GenericDynamicInferenceSet<C, I>) EMPTY_INFERENCE_SET;
 	}
 
 	public static <C> boolean isDerivable(InferenceSet<C> inferenceSet,
@@ -43,6 +43,16 @@ public class InferenceSets {
 			C conclusion, Set<C> statedAxioms) {
 		return ProofNodes.isDerivable(
 				ProofNodes.create(inferenceSet, conclusion), statedAxioms);
+	}
+
+	public static <C, I extends Inference<C>> GenericInferenceSet<C, I> combine(
+			final Iterable<? extends GenericInferenceSet<C, I>> inferenceSets) {
+		return new CombinedInferenceSet<C, I>(inferenceSets);
+	}
+
+	public static <C, I extends Inference<C>> GenericInferenceSet<C, I> combine(
+			final GenericInferenceSet<C, I>... inferenceSets) {
+		return new CombinedInferenceSet<C, I>(inferenceSets);
 	}
 
 }

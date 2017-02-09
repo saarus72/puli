@@ -26,8 +26,8 @@ package org.liveontologies.proof.util;
  * delegate object. Instances of this class are compared by comparing the
  * corresponding delegate objects.
  * 
- * 
  * @author Yevgeny Kazakov
+ * @author Peter Skocovsky
  *
  * @param <D>
  */
@@ -35,7 +35,7 @@ public class Delegator<D> {
 
 	private final D delegate_;
 
-	Delegator(D delegate) {
+	public Delegator(D delegate) {
 		Util.checkNotNull(delegate);
 		this.delegate_ = delegate;
 	}
@@ -46,11 +46,18 @@ public class Delegator<D> {
 
 	@Override
 	public boolean equals(Object o) {
-		if (o instanceof Delegator<?>) {
-			return delegate_.equals(((Delegator<?>) o).delegate_);
+		if (this == o) {
+			return true;
 		}
-		// else
-		return false;
+		if (o == null) {
+			return false;
+		}
+
+		if (getClass() != o.getClass()) {
+			return false;
+		}
+
+		return delegate_.equals(((Delegator<?>) o).delegate_);
 	}
 
 	@Override

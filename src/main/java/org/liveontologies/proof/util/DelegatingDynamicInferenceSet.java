@@ -24,7 +24,7 @@ package org.liveontologies.proof.util;
 public class DelegatingDynamicInferenceSet<C, S extends DynamicInferenceSet<C>>
 		extends DelegatingInferenceSet<C, S> implements DynamicInferenceSet<C> {
 
-	DelegatingDynamicInferenceSet(S delegate) {
+	public DelegatingDynamicInferenceSet(S delegate) {
 		super(delegate);
 	}
 

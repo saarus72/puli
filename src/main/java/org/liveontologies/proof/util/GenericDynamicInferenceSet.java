@@ -21,18 +21,14 @@
  */
 package org.liveontologies.proof.util;
 
-import java.util.Collection;
+public interface GenericDynamicInferenceSet<C, I extends Inference<C>>
+		extends GenericInferenceSet<C, I>, DynamicInferenceSet<C> {
 
-public class DelegatingInferenceSet<C, S extends InferenceSet<C>>
-		extends Delegator<S> implements InferenceSet<C> {
+	// Combined interface.
 
-	public DelegatingInferenceSet(S delegate) {
-		super(delegate);
-	}
-
-	@Override
-	public Collection<? extends Inference<C>> getInferences(C conclusion) {
-		return getDelegate().getInferences(conclusion);
+	public static interface Projection<C>
+			extends GenericDynamicInferenceSet<C, Inference<C>> {
+		// Empty.
 	}
 
 }

@@ -24,10 +24,11 @@ package org.liveontologies.proof.util;
 import java.util.Collection;
 import java.util.Collections;
 
-class EmptyInferenceSet<C> implements DynamicInferenceSet<C> {
+class EmptyInferenceSet<C, I extends Inference<C>>
+		implements GenericDynamicInferenceSet<C, I> {
 
 	@Override
-	public Collection<? extends Inference<C>> getInferences(Object conclusion) {
+	public Collection<? extends I> getInferences(Object conclusion) {
 		return Collections.emptySet();
 	}
 
