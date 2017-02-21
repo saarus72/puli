@@ -33,15 +33,13 @@ import java.util.List;
  *
  * @param <C>
  */
-public class AssertedConclusionInference<C> implements Inference<C> {
+public class AssertedConclusionInference<C> extends Delegator<C>
+		implements Inference<C> {
 
 	public static String NAME = "Asserted Conclusion";
 
-	private final C conclusion_;
-
 	public AssertedConclusionInference(C conclusion) {
-		Util.checkNotNull(conclusion);
-		this.conclusion_ = conclusion;
+		super(conclusion);
 	}
 
 	@Override
@@ -51,12 +49,17 @@ public class AssertedConclusionInference<C> implements Inference<C> {
 
 	@Override
 	public C getConclusion() {
-		return conclusion_;
+		return getDelegate();
 	}
 
 	@Override
 	public List<? extends C> getPremises() {
 		return Collections.emptyList();
+	}
+
+	@Override
+	public String toString() {
+		return Inferences.toString(this);
 	}
 
 }

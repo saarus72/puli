@@ -34,31 +34,30 @@ import java.util.List;
  * @param <O>
  *            the type of conclusion and premises of the output inference
  */
-public abstract class AbstractConvertedInference<I, O> implements Inference<O> {
-
-	private final Inference<I> input_;
+public abstract class AbstractConvertedInference<I, O>
+		extends Delegator<Inference<I>> implements Inference<O> {
 
 	public AbstractConvertedInference(Inference<I> input) {
-		this.input_ = input;
+		super(input);
 	}
 
 	public Inference<I> getInput() {
-		return input_;
+		return getDelegate();
 	}
 
 	@Override
 	public String getName() {
-		return input_.getName();
+		return getDelegate().getName();
 	}
 
 	@Override
 	public O getConclusion() {
-		return convert(input_.getConclusion());
+		return convert(getDelegate().getConclusion());
 	}
 
 	@Override
 	public List<? extends O> getPremises() {
-		final List<? extends I> inputPremises = input_.getPremises();
+		final List<? extends I> inputPremises = getDelegate().getPremises();
 		return new AbstractList<O>() {
 
 			@Override
