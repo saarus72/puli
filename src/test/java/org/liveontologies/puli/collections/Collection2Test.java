@@ -40,15 +40,13 @@ public class Collection2Test {
 	private final static Logger LOGGER_ = LoggerFactory
 			.getLogger(Collection2Test.class);
 
-	@Test
-	public void testListMinimizer() {
-		long seed = new Random().nextLong();
-		LOGGER_.debug("seed: {}", seed);
-		Random rnd = new Random(seed);
-		ArrayListCollection2<Set<Integer>> tested = new ArrayListCollection2<Set<Integer>>();
-		MockListCollection2<Set<Integer>> expected = new MockListCollection2<Set<Integer>>();
-		for (int i = 0; i < 1000; i++) {
-			Set<Integer> next = getRandomSet(rnd, 5 + rnd.nextInt(5), 20);
+	public void testCollection2(Random rnd, Collection2<Set<Integer>> tested,
+			int rounds, int noElements, int minSetSize, int maxSetSize) {
+		Collection2<Set<Integer>> expected = new MockListCollection2<Set<Integer>>();
+		int maxSizeDiffBound = maxSetSize - minSetSize + 1;
+		for (int i = 0; i < rounds; i++) {
+			Set<Integer> next = getRandomSet(rnd,
+					minSetSize + rnd.nextInt(maxSizeDiffBound), noElements);
 			LOGGER_.debug("new set: {}", next);
 			// remove either all subsets or all supersets of the new set
 			boolean pruneSubsets = rnd.nextBoolean();
@@ -60,6 +58,8 @@ public class Collection2Test {
 				expectedIter = expected.superCollectionsOf(next).iterator();
 				testedIter = tested.superCollectionsOf(next).iterator();
 			}
+			assertEquals(expected.isMinimal(next), tested.isMinimal(next));
+			assertEquals(expected.isMaximal(next), tested.isMaximal(next));
 			int expectedPruned = 0;
 			while (expectedIter.hasNext()) {
 				Set<Integer> pruned = expectedIter.next();
@@ -91,6 +91,11 @@ public class Collection2Test {
 				assertFalse(tested.contains(pruned));
 			}
 			assertEquals(expectedPruned, testedPruned);
+			if (pruneSubsets) {
+				assertTrue(tested.isMinimal(next));
+			} else {
+				assertTrue(tested.isMaximal(next));
+			}
 			// add only if nothing is pruned
 			if (expectedPruned == 0) {
 				assertEquals(expected.add(next), tested.add(next));
@@ -104,6 +109,25 @@ public class Collection2Test {
 			assertTrue(tested.contains(s));
 		}
 		assertEquals(expected.size(), count);
+	}
+
+	void runTestSuit(Collection2<Set<Integer>> tested) {
+		long seed = new Random().nextLong();
+		LOGGER_.debug("seed: {}", seed);
+		Random rnd = new Random(seed);
+		try {
+			testCollection2(rnd, tested, 1000, 20, 5, 15);
+			tested.clear();
+			testCollection2(rnd, tested, 500, 100, 5, 50);
+			tested.clear();
+		} catch (Throwable e) {
+			throw new RuntimeException("seed: " + seed, e);
+		}
+	}
+
+	@Test
+	public void testArrayListCollection2() {
+		runTestSuit(new ArrayListCollection2<Set<Integer>>());
 	}
 
 	Set<Integer> getRandomSet(Random rnd, int size, int maxValue) {

@@ -39,7 +39,7 @@ import java.util.Iterator;
  *            the types of elements managed by this {@link Collection2}
  */
 public class ArrayListCollection2<C extends Collection<?>>
-		extends AbstractCollection2<C> {
+		extends AbstractTrieCollection2<C> {
 
 	@Override
 	protected Collection<C> create() {

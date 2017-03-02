@@ -65,4 +65,14 @@ public class MockListCollection2<C extends Collection<?>> extends ArrayList<C>
 		});
 	}
 
+	@Override
+	public boolean isMinimal(Collection<?> s) {
+		return !subCollectionsOf(s).iterator().hasNext();
+	}
+
+	@Override
+	public boolean isMaximal(Collection<?> s) {
+		return !superCollectionsOf(s).iterator().hasNext();
+	}
+
 }

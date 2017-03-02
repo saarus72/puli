@@ -36,6 +36,10 @@ import java.util.Collection;
  */
 public interface Collection2<C extends Collection<?>> extends Collection<C> {
 
+	public boolean isMinimal(Collection<?> s);
+
+	public boolean isMaximal(Collection<?> s);
+
 	/**
 	 * @param s
 	 * @return a view of collections contained in this {@link Collection2} that
