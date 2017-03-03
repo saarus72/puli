@@ -481,13 +481,12 @@ public class BloomTrieCollection2<C extends Collection<?>>
 
 	static class LeafNode<C extends Collection<?>> implements Node<C> {
 
-		private final static int INIT_CAPACITY_ = 16;
+		private final static int INIT_CAPACITY_ = 32;
 
 		private final Object[] collections_;
 
-		private final Long[] fragments_; // can be null
-
-		private final Long[] filters2_;
+		private final long[] fragments_, // can be null
+				filters2_;
 
 		private int size_ = 0;
 
@@ -501,8 +500,8 @@ public class BloomTrieCollection2<C extends Collection<?>>
 
 		LeafNode(long mask, int capacity) {
 			collections_ = new Object[capacity];
-			fragments_ = mask == 0L ? null : new Long[capacity];
-			filters2_ = new Long[capacity];
+			fragments_ = mask == 0L ? null : new long[capacity];
+			filters2_ = new long[capacity];
 		}
 
 		@SuppressWarnings("unchecked")
