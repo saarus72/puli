@@ -100,8 +100,8 @@ public class Collection2Test {
 			if (expectedPruned == 0) {
 				assertEquals(expected.add(next), tested.add(next));
 			}
+			assertEquals(expected.size(), tested.size());
 		}
-		assertEquals(expected.size(), tested.size());
 		// verify that the result has the same elements
 		int count = 0;
 		for (Set<Integer> s : tested) {
@@ -126,8 +126,8 @@ public class Collection2Test {
 	}
 
 	@Test
-	public void testArrayListCollection2() {
-		runTestSuit(new ArrayListCollection2<Set<Integer>>());
+	public void testBloomTrieCollection2() {
+		runTestSuit(new BloomTrieCollection2<Set<Integer>>());
 	}
 
 	Set<Integer> getRandomSet(Random rnd, int size, int maxValue) {
