@@ -41,7 +41,12 @@ public class BloomTrieCollection2<C extends Collection<?>>
 	private static long getFilter(Collection<?> s) {
 		long result = 0;
 		for (Object e : s) {
-			result |= 1L << (e.hashCode() & FILTER_MASK_);
+			// use low 12 bits of hash
+			int hash = e.hashCode();
+			int pos = hash & FILTER_MASK_;
+			hash >>>= FILTER_SHIFT_;
+			pos ^= hash & FILTER_MASK_;
+			result |= 1L << pos;
 		}
 		return result;
 	}
@@ -50,7 +55,12 @@ public class BloomTrieCollection2<C extends Collection<?>>
 	private static long getFilter2(Collection<?> s) {
 		long result = 0;
 		for (Object e : s) {
-			result |= 1L << ((e.hashCode() >> FILTER_SHIFT_) & FILTER_MASK_);
+			// use low 13-24 bits of hash
+			int hash = e.hashCode() >>> 12;
+			int pos = hash & FILTER_MASK_;
+			hash >>>= FILTER_SHIFT_;
+			pos ^= hash & FILTER_MASK_;
+			result |= 1L << pos;
 		}
 		return result;
 	}
